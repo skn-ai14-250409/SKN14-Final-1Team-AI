@@ -1,0 +1,11 @@
+black
+pre-commit
+fastapi
+uvicorn[standard]
+torch
+chromadb
+transformers
+accelerate
+langchain-community
+langchain-huggingface
+sentence-transformers
