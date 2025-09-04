@@ -43,7 +43,6 @@ class LangChainChatService:
             temperature=0.2,
         )
 
-        # Bind tools (계산기 포함)
         self.llm_tools = self.llm.bind_tools([cto_blocker])
 
     async def get_chat_response(self, history: list[dict]) -> str:
