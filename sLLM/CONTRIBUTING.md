@@ -13,6 +13,9 @@ pip install -r requirements.txt
 
 # black 코드 포멧팅 설정
 pre-commit install
+
+(curl -fsSL https://ollama.com/install.sh | sh && ollama serve > ollama.log 2>&1) &
+ollama pull qwen3:0.6b
 ```
 
 `.env` 설정하기
