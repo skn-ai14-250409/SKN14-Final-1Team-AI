@@ -15,10 +15,17 @@ pip install -r requirements.txt
 pre-commit install
 ```
 
+`.env` 설정하기
+
+```
+OLLAMA_API_URL=http://localhost:11434/v1
+OLLAMA_MODEL=qwen3:0.6b
+```
+
 # 로컬 실행 방법
 
 ```bash
-uvicorn main:app --reload
+uvicorn main:app --reload --port 8001
 ```
 
 # API 호출방법
@@ -30,5 +37,6 @@ curl -X GET "http://127.0.0.1:8001/"
 # post
 curl -X POST "http://localhost:8001/api/v1/chat" \
 -H "Content-Type: application/json" \
--d '{"message": "연차 계산 방법은?"}'
+-d '{"history": [
+    {"type": "user", "content": "안녕?"}]}'
 ```

@@ -1,9 +1,11 @@
 from fastapi import APIRouter
-from models.chat_model import ChatMessage
+from models.chat_model import ChatRequest
+from services.langchain_service import chat_service
 
 router = APIRouter()
 
 
 @router.post("/chat")
-def chat(item: ChatMessage):
-    return {"response": "test"}
+async def chat(chat_request: ChatRequest):
+    response = await chat_service.get_chat_response(history=chat_request.history)
+    return {"response": response}

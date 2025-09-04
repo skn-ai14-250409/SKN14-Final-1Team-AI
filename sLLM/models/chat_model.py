@@ -1,5 +1,6 @@
+from typing import Dict, List
 from pydantic import BaseModel
 
 
-class ChatMessage(BaseModel):
-    message: str
+class ChatRequest(BaseModel):
+    history: List[Dict]
