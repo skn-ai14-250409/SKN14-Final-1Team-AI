@@ -10,27 +10,71 @@ from langchain_core.messages import (
     ToolMessage,
 )
 from langchain_core.tools import tool
+from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
 
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# 벡터DB 초기화
+embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
+db_dir = "./chroma_db"
+vectorstore = Chroma(persist_directory=db_dir, embedding_function=embedding_model)
 
+
+# 툴 정의
 @tool(parse_docstring=True)
-def cto_blocker(question: str) -> str:
-    """Reject questions related to CTO (Chief Technology Officer).
+def role_search(question: str, role: str) -> str:
+    """사내 벡터DB에서 특정 role 관련 문서를 검색합니다.
 
     Args:
-        question: User's input text
+        question: 사용자가 입력한 질문
+        role: 검색할 팀/직급 (예: 'frontend', 'backend', 'data_ai', 'cto')
     """
-    return f"해당 질문은 CTO 관련된 내용이라 답변할 수 없습니다."
+    try:
+        # role 기반 검색 수행
+        results = vectorstore.similarity_search(question, k=10, filter={"role": role})
+        if not results:
+            return f"{role} 관련된 답변을 찾지 못했습니다."
+
+        output = []
+        for i, result in enumerate(results, start=1):
+            output.append(
+                f"[{role}] Result {i}:\n"
+                f"Content: {result.page_content}\n"
+                f"Metadata: {result.metadata}"
+            )
+        return "\n\n".join(output)
+    except Exception as e:
+        return f"{role} 검색 중 오류 발생: {e}"
 
 
+@tool(parse_docstring=True)
+def cto_search(question: str) -> str:
+    """CTO 관련 질문일 경우, 모든 role(cto, backend, frontend, data_ai)을 함께 검색합니다.
+
+    Args:
+        question: 사용자가 입력한 질문
+    """
+    outputs = []
+    results = vectorstore.similarity_search(question, k=10)
+    if results:
+        for i, result in enumerate(results, start=1):
+            outputs.append(
+                f"Result {i}:\n"
+                f"Content: {result.page_content}\n"
+                f"Metadata: {result.metadata}"
+            )
+    return "\n\n".join(outputs) if outputs else "CTO 관련된 답변을 찾지 못했습니다."
+
+
+# 서비스 클래스
 class LangChainChatService:
     def __init__(self):
-        self.api_key = os.getenv("OLLAMA_API_URL")
-        if not self.api_key:
+        self.api_url = os.getenv("OLLAMA_API_URL")
+        if not self.api_url:
             raise ValueError("OLLAMA_API_URL environment variable is required")
 
         self.model_name = os.getenv("OLLAMA_MODEL")
@@ -38,13 +82,13 @@ class LangChainChatService:
         # Initialize OpenAI chat model
         self.llm = ChatOpenAI(
             model=self.model_name,
-            base_url=self.api_key,
+            base_url=self.api_url,
             api_key="ollama",
             temperature=0.2,
         )
 
-        # Bind tools (계산기 포함)
-        self.llm_tools = self.llm.bind_tools([cto_blocker])
+        # 툴 바인딩 (cto, frontend, backend, data_ai 검색 지원)
+        self.llm_tools = self.llm.bind_tools([role_search, cto_search])
 
     async def get_chat_response(self, history: list[dict]) -> str:
         try:
@@ -52,13 +96,18 @@ class LangChainChatService:
             당신은 사내 지식을 활용하여 사용자의 질문에 정확하고 유용한 답변을 제공하는 AI 비서입니다.
             다음 지침을 따르세요:
             1. 항상 정중하고 전문적인 어조를 유지하세요.
-            2. 사용자의 질문을 주의 깊게 읽고 이해한 후 답변
-            3. 답변이 불확실한 경우, "잘 모르겠습니다"라고 솔직하게 말하세요.
-            4. 정보를 활용할 때는 신뢰할 수 있는 출처를 사용하세요.
-            5. 답변이 너무 길어지지 않도록 주의하세요.
-            6. 사용자가 추가 질문을 할 수 있도록 격려하세요.
+            2. 일상적인 질문에는 일상적인 답변을 제공하세요.
+            3. 사용자의 질문을 주의 깊게 읽고 이해한 후 답변
+            4. 답변이 불확실한 경우, "잘 모르겠습니다"라고 솔직하게 말하세요.
+            5. 정보를 활용할 때는 신뢰할 수 있는 출처를 사용하세요.
+            6. 답변이 너무 길어지지 않도록 주의하세요.
+            7. 사용자가 추가 질문을 할 수 있도록 격려하세요.
+            8. 필요시 툴을 사용하여 정보를 검색하세요:
 
-            사용자가 CTO 관련 질문을 하면 반드시 "cto_blocker" 툴을 호출하세요.
+            - 사용자가 CTO 관련 질문을 하면 반드시 "cto_search" 툴을 호출하세요.
+            - frontend 질문이면 role="frontend" 으로 "role_search" 툴을 호출하세요.
+            - backend 질문이면 role="backend" 으로 "role_search" 툴을 호출하세요.
+            - data_ai 질문이면 role="data_ai" 으로 "role_search" 툴을 호출하세요.
             """
 
             # 대화 기록 변환
@@ -78,9 +127,15 @@ class LangChainChatService:
             tool_calls = getattr(ai, "tool_calls", None) or []
             if tool_calls:
                 for call in tool_calls:
-                    if call["name"] == "cto_blocker":
-                        question = call["args"]["question"]
-                        result = cto_blocker.invoke({"question": question})
+                    if call["name"] == "role_search":
+                        result = role_search.invoke(call["args"])
+                        logger.info(f"role_search tool Response: {result}")
+                        state.append(
+                            ToolMessage(tool_call_id=call["id"], content=result)
+                        )
+                    elif call["name"] == "cto_search":
+                        result = cto_search.invoke(call["args"])
+                        logger.info(f"cto_search tool Response: {result}")
                         state.append(
                             ToolMessage(tool_call_id=call["id"], content=result)
                         )
@@ -103,5 +158,4 @@ class LangChainChatService:
             raise Exception(f"Failed to get response from AI: {str(e)}")
 
 
-# Create global service instance
 chat_service = LangChainChatService()

@@ -25,7 +25,16 @@ OLLAMA_MODEL=qwen3:0.6b
 # 로컬 실행 방법
 
 ```bash
+(curl -fsSL https://ollama.com/install.sh | sh && ollama serve > ollama.log 2>&1) &
+ollama pull qwen3:0.6b
+
 uvicorn main:app --reload --port 8001
+```
+
+# 도커 실행 방법
+```
+docker build -t codenova-ai .
+docker run -d --name codenova-ai --env-file .env -p 8001:8001 codenova-ai
 ```
 
 # API 호출방법
