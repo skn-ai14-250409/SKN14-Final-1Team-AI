@@ -73,8 +73,8 @@ def cto_search(question: str) -> str:
 # 서비스 클래스
 class LangChainChatService:
     def __init__(self):
-        self.api_key = os.getenv("OLLAMA_API_URL")
-        if not self.api_key:
+        self.api_url = os.getenv("OLLAMA_API_URL")
+        if not self.api_url:
             raise ValueError("OLLAMA_API_URL environment variable is required")
 
         self.model_name = os.getenv("OLLAMA_MODEL")
@@ -82,7 +82,7 @@ class LangChainChatService:
         # Initialize OpenAI chat model
         self.llm = ChatOpenAI(
             model=self.model_name,
-            base_url=self.api_key,
+            base_url=self.api_url,
             api_key="ollama",
             temperature=0.2,
         )
@@ -129,11 +129,13 @@ class LangChainChatService:
                 for call in tool_calls:
                     if call["name"] == "role_search":
                         result = role_search.invoke(call["args"])
+                        logger.info(f"role_search tool Response: {result}")
                         state.append(
                             ToolMessage(tool_call_id=call["id"], content=result)
                         )
                     elif call["name"] == "cto_search":
                         result = cto_search.invoke(call["args"])
+                        logger.info(f"cto_search tool Response: {result}")
                         state.append(
                             ToolMessage(tool_call_id=call["id"], content=result)
                         )
