@@ -4,3 +4,6 @@ fastapi
 uvicorn[standard]
 python-dotenv
 langchain_openai
+langchain_chroma
+langchain_huggingface
+sentence-transformers
