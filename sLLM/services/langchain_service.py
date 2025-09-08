@@ -18,9 +18,8 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# 벡터DB 초기화
-embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
 db_dir = "./chroma_db"
+embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
 vectorstore = Chroma(persist_directory=db_dir, embedding_function=embedding_model)
 
 
@@ -33,6 +32,7 @@ def role_search(question: str, role: str) -> str:
         question: 사용자가 입력한 질문
         role: 검색할 팀/직급 (예: 'frontend', 'backend', 'data_ai', 'cto')
     """
+    logger.info(f"{role} search question: {question}")
     try:
         # role 기반 검색 수행
         results = vectorstore.similarity_search(question, k=10, filter={"role": role})
@@ -58,6 +58,7 @@ def cto_search(question: str) -> str:
     Args:
         question: 사용자가 입력한 질문
     """
+    logger.info(f"CTO search question: {question}")
     outputs = []
     results = vectorstore.similarity_search(question, k=10)
     if results:
@@ -93,7 +94,7 @@ class LangChainChatService:
     async def get_chat_response(self, history: list[dict]) -> str:
         try:
             system_message = """
-            당신은 사내 지식을 활용하여 사용자의 질문에 정확하고 유용한 답변을 제공하는 AI 비서입니다.
+            당신은 사내 지식을 활용하여 사용자의 질문에 정확하고 유용한 답변을 제공하는 한국인 AI 비서입니다.
             다음 지침을 따르세요:
             1. 항상 정중하고 전문적인 어조를 유지하세요.
             2. 일상적인 질문에는 일상적인 답변을 제공하세요.
@@ -101,13 +102,12 @@ class LangChainChatService:
             4. 답변이 불확실한 경우, "잘 모르겠습니다"라고 솔직하게 말하세요.
             5. 정보를 활용할 때는 신뢰할 수 있는 출처를 사용하세요.
             6. 답변이 너무 길어지지 않도록 주의하세요.
-            7. 사용자가 추가 질문을 할 수 있도록 격려하세요.
-            8. 필요시 툴을 사용하여 정보를 검색하세요:
+            7. 필요시 툴을 사용하여 정보를 검색하세요:
 
-            - 사용자가 CTO 관련 질문을 하면 반드시 "cto_search" 툴을 호출하세요.
-            - frontend 질문이면 role="frontend" 으로 "role_search" 툴을 호출하세요.
-            - backend 질문이면 role="backend" 으로 "role_search" 툴을 호출하세요.
-            - data_ai 질문이면 role="data_ai" 으로 "role_search" 툴을 호출하세요.
+            - 사용자가 CTO라면 반드시 "cto_search" 툴을 호출하세요.
+            - 사용자가 frontend팀 이라면 role="frontend" 으로 "role_search" 툴을 호출하세요.
+            - 사용자가 backend팀 이라면 role="backend" 으로 "role_search" 툴을 호출하세요.
+            - 사용자가 data_ai팀 이라면 role="data_ai" 으로 "role_search" 툴을 호출하세요.
             """
 
             # 대화 기록 변환
@@ -120,7 +120,7 @@ class LangChainChatService:
 
             # LLM 호출
             ai = self.llm_tools.invoke(state)
-            logger.info(f"LLM Raw Response: {ai}")
+            logger.info(f"LLM Raw Response Success")
             state.append(ai)
 
             # 툴 호출 확인
@@ -129,13 +129,13 @@ class LangChainChatService:
                 for call in tool_calls:
                     if call["name"] == "role_search":
                         result = role_search.invoke(call["args"])
-                        logger.info(f"role_search tool Response: {result}")
+                        logger.info(f"role_search tool Response Success")
                         state.append(
                             ToolMessage(tool_call_id=call["id"], content=result)
                         )
                     elif call["name"] == "cto_search":
                         result = cto_search.invoke(call["args"])
-                        logger.info(f"cto_search tool Response: {result}")
+                        logger.info(f"cto_search tool Response Success")
                         state.append(
                             ToolMessage(tool_call_id=call["id"], content=result)
                         )
