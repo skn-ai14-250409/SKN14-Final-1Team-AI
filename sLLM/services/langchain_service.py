@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import gdown
@@ -111,17 +112,18 @@ def cto_search(question: str) -> str:
 # 서비스 클래스
 class LangChainChatService:
     def __init__(self):
-        self.api_url = os.getenv("OLLAMA_API_URL")
+        self.api_url = os.getenv("VLLM_API_URL")
         if not self.api_url:
-            raise ValueError("OLLAMA_API_URL environment variable is required")
+            raise ValueError("VLLM_API_URL environment variable is required")
 
-        self.model_name = os.getenv("OLLAMA_MODEL")
+        self.model_name = os.getenv("VLLM_MODEL")
+        self.api_key = os.getenv("VLLM_API_KEY")
 
-        # Initialize OpenAI chat model
+        # OpenAI 호환 LLM 초기화
         self.llm = ChatOpenAI(
             model=self.model_name,
-            base_url=self.api_url,
-            api_key="ollama",
+            openai_api_base=self.api_url,
+            openai_api_key=self.api_key,
             temperature=0.2,
         )
 
@@ -134,63 +136,80 @@ class LangChainChatService:
             당신은 사내 지식을 활용하여 사용자의 질문에 정확하고 유용한 답변을 제공하는 한국인 AI 비서입니다.
             다음 지침을 따르세요:
             1. 항상 정중하고 전문적인 어조를 유지하세요.
-            2. 일상적인 질문에는 일상적인 답변을 제공하세요.
-            3. 사용자의 질문을 주의 깊게 읽고 이해한 후 답변
-            4. 답변이 불확실한 경우, "잘 모르겠습니다"라고 솔직하게 말하세요.
-            5. 정보를 활용할 때는 신뢰할 수 있는 출처를 사용하세요.
-            6. 답변이 너무 길어지지 않도록 주의하세요.
-            7. 필요시 툴을 사용하여 정보를 검색하세요:
+            2. 사실에 기반한 정보를 사용하세요.
+            3. 답변이 불확실한 경우, "잘 모르겠습니다"라고 솔직하게 말하세요.
+            4. 답변이 너무 길지 않게 하세요.
+            5. 필요시 툴을 사용하여 정보를 검색하세요:
 
             - 사용자가 CTO라면 반드시 "cto_search" 툴을 호출하세요.
-            - 사용자가 frontend팀 이라면 role="frontend" 으로 "role_search" 툴을 호출하세요.
-            - 사용자가 backend팀 이라면 role="backend" 으로 "role_search" 툴을 호출하세요.
-            - 사용자가 data_ai팀 이라면 role="data_ai" 으로 "role_search" 툴을 호출하세요.
+            - frontend팀이면 role="frontend"으로 "role_search" 툴을 호출하세요.
+            - backend팀이면 role="backend"으로 "role_search" 툴을 호출하세요.
+            - data_ai팀이면 role="data_ai"으로 "role_search" 툴을 호출하세요.
             """
 
             # 대화 기록 변환
             state = [SystemMessage(content=system_message)]
             for h in history:
-                if h["type"] == "user":
+                if h["role"] == "user":
                     state.append(HumanMessage(content=h["content"]))
-                elif h["type"] == "assistant":
+                elif h["role"] == "assistant":
                     state.append(AIMessage(content=h["content"]))
 
-            # LLM 호출
-            ai = self.llm_tools.invoke(state)
-            logger.info(f"LLM Raw Response Success")
-            state.append(ai)
-
-            # 툴 호출 확인
-            tool_calls = getattr(ai, "tool_calls", None) or []
-            if tool_calls:
-                for call in tool_calls:
-                    if call["name"] == "role_search":
-                        result = role_search.invoke(call["args"])
-                        logger.info(f"role_search tool Response Success")
-                        state.append(
-                            ToolMessage(tool_call_id=call["id"], content=result)
-                        )
-                    elif call["name"] == "cto_search":
-                        result = cto_search.invoke(call["args"])
-                        logger.info(f"cto_search tool Response Success")
-                        state.append(
-                            ToolMessage(tool_call_id=call["id"], content=result)
-                        )
-                # 툴 실행 결과 반영 후 다시 LLM 호출
-                ai = self.llm_tools.invoke(state)
-                state.append(ai)
+            # LLM한테 Tool Call 호출을 확인한다.
+            """
+            <think>...</think>
+            <tool_call>...</tool_call>
+            형식을 리턴한다.
+            """
+            llm_tool = self.llm_tools.invoke(state)
+            logger.info("LLM Raw Response Success")
+            state.append(llm_tool)
 
             # 최종 답변 추출
             assistant_reply = state[-1].content
+            matches = re.findall(
+                r"<tool_call>\s*(\{.*?\})\s*</tool_call>", assistant_reply, flags=re.S
+            )
+            extra_calls = []
+            for m in matches:
+                try:
+                    extra_calls.append(json.loads(m))
+                except json.JSONDecodeError:
+                    pass
 
-            # <think>...</think> 태그 제거 (열림 없음 + 닫힘만 있어도 제거)
+            if extra_calls:
+                for call in extra_calls:
+                    if call["name"] == "role_search":
+                        result = role_search.invoke(call["arguments"])
+                        state.append(
+                            ToolMessage(
+                                tool_call_id=call.get("id", "extra1"), content=result
+                            )
+                        )
+                        logger.info("role_search (parsed) tool Response Success")
+                    elif call["name"] == "cto_search":
+                        result = cto_search.invoke(call["arguments"])
+                        state.append(
+                            ToolMessage(
+                                tool_call_id=call.get("id", "extra2"), content=result
+                            )
+                        )
+                        logger.info("cto_search (parsed) tool Response Success")
+
+                # 툴 실행 결과 반영 후 다시 호출
+                llm_res = self.llm_tools.invoke(state)
+                state.append(llm_res)
+
+            assistant_reply = state[-1].content
             assistant_reply = re.sub(
                 r"<think>.*?</think>", "", assistant_reply, flags=re.S
             )
-            assistant_reply = assistant_reply.replace("</think>", "")
-            assistant_reply = assistant_reply.strip()
+            assistant_reply = assistant_reply.replace("</think>", "").strip()
+            logger.info("Final Assistant Reply Generated")
+            logger.info(f"{assistant_reply}")
 
             return assistant_reply
+
         except Exception as e:
             raise Exception(f"Failed to get response from AI: {str(e)}")
 
