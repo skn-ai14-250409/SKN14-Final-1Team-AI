@@ -1,6 +1,8 @@
 import logging
-import os
 import re
+import gdown
+import os, shutil, tempfile
+from pathlib import Path
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import (
@@ -13,14 +15,47 @@ from langchain_core.tools import tool
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+DB_DIR = os.path.join(HERE, "chroma_db")
+DRIVE_URL = "https://drive.google.com/drive/folders/1STUOUcZWZatvaK54_B9qxv0mEEjYAub0"
+
+
+# 구글 드라이브 링크 안에 있는 파일을 통으로 가져와서 chroma_db 폴더에 넣기
+def download_drive_folder_to_chroma_db(folder_url: str, target_dir: Path):
+    target_dir = Path(target_dir).resolve()
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    with tempfile.TemporaryDirectory() as td:
+        gdown.download_folder(url=folder_url, output=td, quiet=False, use_cookies=False)
+        entries = [Path(td) / name for name in os.listdir(td)]
+        src_root = entries[0] if len(entries) == 1 and entries[0].is_dir() else Path(td)
+
+        for p in src_root.iterdir():
+            dst = target_dir / p.name
+            if dst.exists():
+                shutil.rmtree(dst) if dst.is_dir() else dst.unlink()
+            shutil.move(str(p), str(dst))
+
+    if not (target_dir / "chroma.sqlite3").exists():
+        raise RuntimeError(f"'chroma.sqlite3'가 없습니다: {target_dir}")
+
+
+def create_chroma_db():
+    HERE = Path(__file__).resolve().parent
+    FOLDER_URL = DRIVE_URL
+    download_drive_folder_to_chroma_db(FOLDER_URL, HERE / "chroma_db")
+
+
+if not os.path.isdir(DB_DIR):
+    create_chroma_db()
+
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-db_dir = "./chroma_db"
 embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
-vectorstore = Chroma(persist_directory=db_dir, embedding_function=embedding_model)
+vectorstore = Chroma(persist_directory=DB_DIR, embedding_function=embedding_model)
 
 
 # 툴 정의
@@ -46,6 +81,7 @@ def role_search(question: str, role: str) -> str:
                 f"Content: {result.page_content}\n"
                 f"Metadata: {result.metadata}"
             )
+        logger.info(f"{role} search found {len(output)} results.")
         return "\n\n".join(output)
     except Exception as e:
         return f"{role} 검색 중 오류 발생: {e}"
@@ -68,6 +104,7 @@ def cto_search(question: str) -> str:
                 f"Content: {result.page_content}\n"
                 f"Metadata: {result.metadata}"
             )
+    logger.info(f"CTO search found {len(outputs)} results.")
     return "\n\n".join(outputs) if outputs else "CTO 관련된 답변을 찾지 못했습니다."
 
 
