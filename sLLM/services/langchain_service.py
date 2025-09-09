@@ -16,6 +16,8 @@ from langchain_core.tools import tool
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
+from models.chat_model import ChatRequest
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DB_DIR = os.path.join(HERE, "chroma_db")
 DRIVE_URL = "https://drive.google.com/drive/folders/1STUOUcZWZatvaK54_B9qxv0mEEjYAub0"
@@ -43,8 +45,7 @@ def download_drive_folder_to_chroma_db(folder_url: str, target_dir: Path):
 
 def create_chroma_db():
     HERE = Path(__file__).resolve().parent
-    FOLDER_URL = DRIVE_URL
-    download_drive_folder_to_chroma_db(FOLDER_URL, HERE / "chroma_db")
+    download_drive_folder_to_chroma_db(DRIVE_URL, HERE / "chroma_db")
 
 
 if not os.path.isdir(DB_DIR):
@@ -61,36 +62,36 @@ vectorstore = Chroma(persist_directory=DB_DIR, embedding_function=embedding_mode
 
 # 툴 정의
 @tool(parse_docstring=True)
-def role_search(question: str, role: str) -> str:
-    """사내 벡터DB에서 특정 role 관련 문서를 검색합니다.
+def team_search(question: str, team: str) -> str:
+    """사내 벡터DB에서 특정 team 관련 문서를 검색합니다.
 
     Args:
         question: 사용자가 입력한 질문
-        role: 검색할 팀/직급 (예: 'frontend', 'backend', 'data_ai', 'cto')
+        team: 검색할 팀/직급 (예: 'frontend', 'backend', 'data_ai')
     """
-    logger.info(f"{role} search question: {question}")
+    logger.info(f"{team} search question: {question}")
     try:
-        # role 기반 검색 수행
-        results = vectorstore.similarity_search(question, k=10, filter={"role": role})
+        # team 기반 검색 수행
+        results = vectorstore.similarity_search(question, k=10, filter={"team": team})
         if not results:
-            return f"{role} 관련된 답변을 찾지 못했습니다."
+            return f"{team} 관련된 답변을 찾지 못했습니다."
 
         output = []
         for i, result in enumerate(results, start=1):
             output.append(
-                f"[{role}] Result {i}:\n"
+                f"[{team}] Result {i}:\n"
                 f"Content: {result.page_content}\n"
                 f"Metadata: {result.metadata}"
             )
-        logger.info(f"{role} search found {len(output)} results.")
+        logger.info(f"{team} search found {len(output)} results.")
         return "\n\n".join(output)
     except Exception as e:
-        return f"{role} 검색 중 오류 발생: {e}"
+        return f"{team} 검색 중 오류 발생: {e}"
 
 
 @tool(parse_docstring=True)
 def cto_search(question: str) -> str:
-    """CTO 관련 질문일 경우, 모든 role(cto, backend, frontend, data_ai)을 함께 검색합니다.
+    """CTO 관련 질문일 경우, 모든 team(cto, backend, frontend, data_ai)을 함께 검색합니다.
 
     Args:
         question: 사용자가 입력한 질문
@@ -127,24 +128,40 @@ class LangChainChatService:
             temperature=0.2,
         )
 
-        # 툴 바인딩 (cto, frontend, backend, data_ai 검색 지원)
-        self.llm_tools = self.llm.bind_tools([role_search, cto_search])
+    async def get_chat_response(self, request: ChatRequest) -> str:
+        history = request.history
+        permission = request.permission
+        tone = request.tone
 
-    async def get_chat_response(self, history: list[dict]) -> str:
         try:
-            system_message = """
+            # 톤별 가이드
+            if tone == "formal":
+                tone_instruction = "항상 정중하고 사무적인 어조로 답변하세요."
+            elif tone == "informal":
+                tone_instruction = "친구처럼 친근하고 가볍게 반말로 답변하세요."
+
+            # permission별 툴 선택
+            if permission == "cto":
+                tool_name = "cto_search"
+                # 툴 바인딩
+                llm_tools = self.llm.bind_tools([cto_search])
+            elif permission in ["backend", "frontend", "data-ai"]:
+                tool_name = "team_search"
+                # 툴 바인딩
+                llm_tools = self.llm.bind_tools([team_search])
+            else:
+                tool_name = "none"
+                llm_tools = self.llm.bind_tools([])
+
+            # 시스템 메시지 생성
+            system_message = f"""
             당신은 사내 지식을 활용하여 사용자의 질문에 정확하고 유용한 답변을 제공하는 한국인 AI 비서입니다.
             다음 지침을 따르세요:
-            1. 항상 정중하고 전문적인 어조를 유지하세요.
+            1. {tone_instruction}
             2. 사실에 기반한 정보를 사용하세요.
             3. 답변이 불확실한 경우, "잘 모르겠습니다"라고 솔직하게 말하세요.
             4. 답변이 너무 길지 않게 하세요.
-            5. 필요시 툴을 사용하여 정보를 검색하세요:
-
-            - 사용자가 CTO라면 반드시 "cto_search" 툴을 호출하세요.
-            - frontend팀이면 role="frontend"으로 "role_search" 툴을 호출하세요.
-            - backend팀이면 role="backend"으로 "role_search" 툴을 호출하세요.
-            - data_ai팀이면 role="data_ai"으로 "role_search" 툴을 호출하세요.
+            5. 필요시 툴을 사용하여 정보를 검색하세요: "{tool_name}" 툴만 사용하세요.
             """
 
             # 대화 기록 변환
@@ -161,15 +178,17 @@ class LangChainChatService:
             <tool_call>...</tool_call>
             형식을 리턴한다.
             """
-            llm_tool = self.llm_tools.invoke(state)
+
+            llm_tool = llm_tools.invoke(state)
             logger.info("LLM Raw Response Success")
             state.append(llm_tool)
 
-            # 최종 답변 추출
+            # <tool_call> 분석
             assistant_reply = state[-1].content
             matches = re.findall(
                 r"<tool_call>\s*(\{.*?\})\s*</tool_call>", assistant_reply, flags=re.S
             )
+
             extra_calls = []
             for m in matches:
                 try:
@@ -179,14 +198,14 @@ class LangChainChatService:
 
             if extra_calls:
                 for call in extra_calls:
-                    if call["name"] == "role_search":
-                        result = role_search.invoke(call["arguments"])
+                    if call["name"] == "team_search":
+                        result = team_search.invoke(call["arguments"])
                         state.append(
                             ToolMessage(
                                 tool_call_id=call.get("id", "extra1"), content=result
                             )
                         )
-                        logger.info("role_search (parsed) tool Response Success")
+                        logger.info("team_search (parsed) tool Response Success")
                     elif call["name"] == "cto_search":
                         result = cto_search.invoke(call["arguments"])
                         state.append(
@@ -196,15 +215,17 @@ class LangChainChatService:
                         )
                         logger.info("cto_search (parsed) tool Response Success")
 
-                # 툴 실행 결과 반영 후 다시 호출
-                llm_res = self.llm_tools.invoke(state)
+                # 툴 결과 반영 후 재호출
+                llm_res = llm_tools.invoke(state)
                 state.append(llm_res)
 
+            # 최종 답변 정리
             assistant_reply = state[-1].content
             assistant_reply = re.sub(
                 r"<think>.*?</think>", "", assistant_reply, flags=re.S
             )
             assistant_reply = assistant_reply.replace("</think>", "").strip()
+
             logger.info("Final Assistant Reply Generated")
             logger.info(f"{assistant_reply}")
 
