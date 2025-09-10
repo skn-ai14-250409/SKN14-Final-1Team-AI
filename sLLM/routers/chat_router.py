@@ -7,5 +7,5 @@ router = APIRouter()
 
 @router.post("/chat")
 async def chat(chat_request: ChatRequest):
-    response = await chat_service.get_chat_response(history=chat_request.history)
+    response = await chat_service.get_chat_response(chat_request)
     return {"response": response}
