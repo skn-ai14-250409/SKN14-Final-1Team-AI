@@ -72,8 +72,9 @@ def team_search(question: str, team: str) -> str:
     logger.info(f"{team} search question: {question}")
     try:
         # team 기반 검색 수행
-        results = vectorstore.similarity_search(question, k=10, filter={"team": team})
+        results = vectorstore.similarity_search(question, k=10, filter={"role": team})
         if not results:
+            logger.info(f"{team} 관련된 답변을 찾지 못했습니다.")
             return f"{team} 관련된 답변을 찾지 못했습니다."
 
         output = []
@@ -132,6 +133,7 @@ class LangChainChatService:
         history = request.history
         permission = request.permission
         tone = request.tone
+        logger.info(f"Chat Request - Permission: {permission}, Tone: {tone}")
 
         try:
             # 톤별 가이드
@@ -142,16 +144,17 @@ class LangChainChatService:
 
             # permission별 툴 선택
             if permission == "cto":
-                tool_name = "cto_search"
                 # 툴 바인딩
                 llm_tools = self.llm.bind_tools([cto_search])
+                tool_prompt = f"사용자는 CTO며 반드시 cto_search 툴을 호출하세요."
             elif permission in ["backend", "frontend", "data-ai"]:
-                tool_name = "team_search"
                 # 툴 바인딩
                 llm_tools = self.llm.bind_tools([team_search])
+                tool_prompt = f"사용자는 {permission}팀이며 반드시 team={permission}으로 team_search 툴을 호출하세요."
             else:
-                tool_name = "none"
                 llm_tools = self.llm.bind_tools([])
+                tool_prompt = f""
+            logger.info(f"Tools Prompt: {tool_prompt}")
 
             # 시스템 메시지 생성
             system_message = f"""
@@ -161,7 +164,7 @@ class LangChainChatService:
             2. 사실에 기반한 정보를 사용하세요.
             3. 답변이 불확실한 경우, "잘 모르겠습니다"라고 솔직하게 말하세요.
             4. 답변이 너무 길지 않게 하세요.
-            5. 필요시 툴을 사용하여 정보를 검색하세요: "{tool_name}" 툴만 사용하세요.
+            5. {tool_prompt}
             """
 
             # 대화 기록 변환
