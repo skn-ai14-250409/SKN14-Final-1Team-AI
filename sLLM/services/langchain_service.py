@@ -234,7 +234,50 @@ class LangChainChatService:
             logger.info("Final Assistant Reply Generated")
             logger.info(f"{assistant_reply}")
 
-            return assistant_reply
+            # 제목 요약 생성
+            title_llm = ChatOpenAI(
+                model=self.model_name,
+                openai_api_base=self.api_url,
+                openai_api_key=self.api_key,
+                temperature=0.0,
+            )
+
+            title_system_prompt = f"""
+                다음 문장을 바탕으로 한국어로 **짧고 간결한 대화 제목**을 하나만 만들어라.
+                절대 원문 문장을 그대로 복사하지 말고, 핵심 주제를 명사 중심으로 추출하라.
+
+                규칙:                      
+                - 글자 수: 12자 이상, 24자 이하
+                - 반드시 명사/주제어 위주 (불필요한 수식어 제거)
+                - 이모지, 따옴표, 마침표, 물음표, 느낌표, 특수문자 금지
+                - 접두사·접미사, 괄호, 콜론 금지
+                - 문장 그대로 복사 후 붙여넣기 하지 말고, 핵심 키워드만 뽑아서 제목화
+                - 질문 원문을 절대 그대로 베끼지 말 것 (핵심 개념만 압축)
+                - 답변은 오직 제목 텍스트만 출력 (불필요한 설명·접두어 금지)
+                                        
+                예시:
+                - 입력: "코드노바의 API 서버 기술스택알려줘"
+                    출력: 코드노바의 API 서버 기술스택
+                - 입력: "코드노바의 캐시 만료 시간은 어떤 기준으로 설정해야 하나요?"
+                    출력: 코드노바의 캐시 만료 시간
+            """
+
+            title_prompt = [
+                SystemMessage(content=title_system_prompt),
+                HumanMessage(
+                    content=json.dumps(
+                        history + [{"role": "assistant", "content": assistant_reply}],
+                        ensure_ascii=False,
+                    )
+                ),
+            ]
+
+            title_res = title_llm.invoke(title_prompt)
+            title = title_res.content.strip()
+            title = re.sub(r"<think>.*?</think>", "", title, flags=re.S)
+            title = title.replace("</think>", "").strip()
+
+            return assistant_reply, title
 
         except Exception as e:
             raise Exception(f"Failed to get response from AI: {str(e)}")
