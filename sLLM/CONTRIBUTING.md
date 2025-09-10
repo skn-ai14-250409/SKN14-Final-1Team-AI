@@ -18,16 +18,14 @@ pre-commit install
 `.env` 설정하기
 
 ```
-OLLAMA_API_URL=http://localhost:11434/v1
-OLLAMA_MODEL=qwen3:0.6b
+VLLM_API_URL=https://your_url-8000.proxy.runpod.net/v1
+VLLM_MODEL=Qwen/Qwen3-8B
+VLLM_API_KEY=sk-xxxx
 ```
 
 # 로컬 실행 방법
 
 ```bash
-(curl -fsSL https://ollama.com/install.sh | sh && ollama serve > ollama.log 2>&1) &
-ollama pull qwen3:0.6b
-
 uvicorn main:app --reload --port 8001
 ```
 
@@ -47,5 +45,5 @@ curl -X GET "http://127.0.0.1:8001/"
 curl -X POST "http://localhost:8001/api/v1/chat" \
 -H "Content-Type: application/json" \
 -d '{"history": [
-    {"type": "user", "content": "안녕?"}]}'
+    {"role": "user", "content": "나 백앤드팀인데 코드노바의 API 서버 기술스택알려줘"}]}'
 ```
