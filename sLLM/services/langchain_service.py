@@ -138,9 +138,11 @@ class LangChainChatService:
         try:
             # 톤별 가이드
             if tone == "formal":
-                tone_instruction = "항상 정중하고 사무적인 어조로 답변하세요."
+                tone_instruction = (
+                    "기존의 말투는 잊고 정중하고 사무적인 어조로 답변하세요."
+                )
             elif tone == "informal":
-                tone_instruction = "친구처럼 친근하고 가볍게 반말로 답변하세요."
+                tone_instruction = "기존의 말투는 잊고 가볍고 친근한 반말로 답변하세요."
 
             # permission별 툴 선택
             if permission == "cto":
