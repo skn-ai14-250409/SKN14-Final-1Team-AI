@@ -1,0 +1,48 @@
+# Core LangChain packages
+langchain>=0.2.0
+langchain-core>=0.2.0
+langchain-openai>=0.1.0
+langchain-community>=0.2.0
+langchain-chroma>=0.1.0
+langchain-huggingface>=0.1.0
+langchain-text-splitters>=0.2.0
+
+# LangGraph
+langgraph>=0.1.0
+
+# OpenAI
+openai>=1.0.0
+
+# Vector Database
+chromadb>=0.4.0
+
+# RAG Evaluation
+ragas>=0.1.0
+
+# Machine Learning
+torch>=2.0.0
+transformers>=4.30.0
+sentence-transformers>=2.2.0
+
+# Data Processing
+pandas>=2.0.0
+datasets>=2.14.0
+
+# File Handling
+gdown>=4.7.0
+requests>=2.31.0
+pypdf>=3.0.0
+rapidfuzz>=3.0.0
+
+# Environment
+python-dotenv>=1.0.0
+
+# Standard library packages (usually included with Python)
+# typing
+# json
+# os
+# pathlib
+# tempfile
+# shutil
+# zipfile
+# traceback
