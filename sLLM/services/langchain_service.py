@@ -149,7 +149,7 @@ class LangChainChatService:
                 # 툴 바인딩
                 llm_tools = self.llm.bind_tools([cto_search])
                 tool_prompt = f"사용자는 CTO며 반드시 cto_search 툴을 호출하세요."
-            elif permission in ["backend", "frontend", "data-ai"]:
+            elif permission in ["backend", "frontend", "data_ai"]:
                 # 툴 바인딩
                 llm_tools = self.llm.bind_tools([team_search])
                 tool_prompt = f"사용자는 {permission}팀이며 반드시 team={permission}으로 team_search 툴을 호출하세요."
