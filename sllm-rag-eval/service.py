@@ -16,48 +16,33 @@ from langchain_core.tools import tool
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
-from models.chat_model import ChatRequest
-
-HERE = os.path.dirname(os.path.abspath(__file__))
-DB_DIR = os.path.join(HERE, "chroma_db")
-DRIVE_URL = "https://drive.google.com/drive/folders/1STUOUcZWZatvaK54_B9qxv0mEEjYAub0"
-
-
-# 구글 드라이브 링크 안에 있는 파일을 통으로 가져와서 chroma_db 폴더에 넣기
-def download_drive_folder_to_chroma_db(folder_url: str, target_dir: Path):
-    target_dir = Path(target_dir).resolve()
-    target_dir.mkdir(parents=True, exist_ok=True)
-
-    with tempfile.TemporaryDirectory() as td:
-        gdown.download_folder(url=folder_url, output=td, quiet=False, use_cookies=False)
-        entries = [Path(td) / name for name in os.listdir(td)]
-        src_root = entries[0] if len(entries) == 1 and entries[0].is_dir() else Path(td)
-
-        for p in src_root.iterdir():
-            dst = target_dir / p.name
-            if dst.exists():
-                shutil.rmtree(dst) if dst.is_dir() else dst.unlink()
-            shutil.move(str(p), str(dst))
-
-    if not (target_dir / "chroma.sqlite3").exists():
-        raise RuntimeError(f"'chroma.sqlite3'가 없습니다: {target_dir}")
-
-
-def create_chroma_db():
-    HERE = Path(__file__).resolve().parent
-    download_drive_folder_to_chroma_db(DRIVE_URL, HERE / "chroma_db")
-
-
-if not os.path.isdir(DB_DIR):
-    create_chroma_db()
-
-load_dotenv()
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
-vectorstore = Chroma(persist_directory=DB_DIR, embedding_function=embedding_model)
+
+# 기존 벡터 저장소 로드
+vectorstore = Chroma(
+    embedding_function=embedding_model,
+    persist_directory="./chroma_db",
+)
+
+
+@tool(parse_docstring=True)
+def cto_search(question: str) -> str:
+    """CTO 관련 질문일 경우, 모든 team(cto, backend, frontend, data_ai)을 함께 검색합니다.
+
+    Args:
+        question: 사용자가 입력한 질문
+    """
+    outputs = []
+    results = vectorstore.similarity_search(question, k=10)
+    if results:
+        for i, result in enumerate(results, start=1):
+            outputs.append(
+                f"Result {i}:\n"
+                f"Content: {result.page_content}\n"
+                f"Metadata: {result.metadata}"
+            )
+    return "\n\n".join(outputs) if outputs else "CTO 관련된 답변을 찾지 못했습니다."
+
 
 
 # 툴 정의
@@ -69,12 +54,10 @@ def team_search(question: str, team: str) -> str:
         question: 사용자가 입력한 질문
         team: 검색할 팀/직급 (예: 'frontend', 'backend', 'data_ai')
     """
-    logger.info(f"{team} search question: {question}")
     try:
         # team 기반 검색 수행
         results = vectorstore.similarity_search(question, k=10, filter={"role": team})
         if not results:
-            logger.info(f"{team} 관련된 답변을 찾지 못했습니다.")
             return f"{team} 관련된 답변을 찾지 못했습니다."
 
         output = []
@@ -84,31 +67,9 @@ def team_search(question: str, team: str) -> str:
                 f"Content: {result.page_content}\n"
                 f"Metadata: {result.metadata}"
             )
-        logger.info(f"{team} search found {len(output)} results.")
         return "\n\n".join(output)
     except Exception as e:
         return f"{team} 검색 중 오류 발생: {e}"
-
-
-@tool(parse_docstring=True)
-def cto_search(question: str) -> str:
-    """CTO 관련 질문일 경우, 모든 team(cto, backend, frontend, data_ai)을 함께 검색합니다.
-
-    Args:
-        question: 사용자가 입력한 질문
-    """
-    logger.info(f"CTO search question: {question}")
-    outputs = []
-    results = vectorstore.similarity_search(question, k=10)
-    if results:
-        for i, result in enumerate(results, start=1):
-            outputs.append(
-                f"Result {i}:\n"
-                f"Content: {result.page_content}\n"
-                f"Metadata: {result.metadata}"
-            )
-    logger.info(f"CTO search found {len(outputs)} results.")
-    return "\n\n".join(outputs) if outputs else "CTO 관련된 답변을 찾지 못했습니다."
 
 
 # 서비스 클래스
@@ -129,12 +90,10 @@ class LangChainChatService:
             temperature=0.2,
         )
 
-    async def get_chat_response(self, request: ChatRequest) -> str:
+    def get_chat_response(self, request) -> str:
         history = request.history
         permission = request.permission
         tone = request.tone
-        logger.info(f"Chat Request - Permission: {permission}, Tone: {tone}")
-
         try:
             # 톤별 가이드
             if tone == "formal":
@@ -156,7 +115,6 @@ class LangChainChatService:
             else:
                 llm_tools = self.llm.bind_tools([])
                 tool_prompt = f""
-            logger.info(f"Tools Prompt: {tool_prompt}")
 
             # 시스템 메시지 생성
             system_message = f"""
@@ -185,7 +143,6 @@ class LangChainChatService:
             """
 
             llm_tool = llm_tools.invoke(state)
-            logger.info("LLM Raw Response Success")
             state.append(llm_tool)
 
             # <tool_call> 분석
@@ -210,15 +167,12 @@ class LangChainChatService:
                                 tool_call_id=call.get("id", "extra1"), content=result
                             )
                         )
-                        logger.info("team_search (parsed) tool Response Success")
                     elif call["name"] == "cto_search":
-                        result = cto_search.invoke(call["arguments"])
                         state.append(
                             ToolMessage(
                                 tool_call_id=call.get("id", "extra2"), content=result
                             )
                         )
-                        logger.info("cto_search (parsed) tool Response Success")
 
                 # 툴 결과 반영 후 재호출
                 llm_res = llm_tools.invoke(state)
@@ -231,53 +185,7 @@ class LangChainChatService:
             )
             assistant_reply = assistant_reply.replace("</think>", "").strip()
 
-            logger.info("Final Assistant Reply Generated")
-            logger.info(f"{assistant_reply}")
-
-            # 제목 요약 생성
-            title_llm = ChatOpenAI(
-                model=self.model_name,
-                openai_api_base=self.api_url,
-                openai_api_key=self.api_key,
-                temperature=0.0,
-            )
-
-            title_system_prompt = f"""
-                다음 문장을 바탕으로 한국어로 **짧고 간결한 대화 제목**을 하나만 만들어라.
-                절대 원문 문장을 그대로 복사하지 말고, 핵심 주제를 명사 중심으로 추출하라.
-
-                규칙:                      
-                - 글자 수: 12자 이상, 24자 이하
-                - 반드시 명사/주제어 위주 (불필요한 수식어 제거)
-                - 이모지, 따옴표, 마침표, 물음표, 느낌표, 특수문자 금지
-                - 접두사·접미사, 괄호, 콜론 금지
-                - 문장 그대로 복사 후 붙여넣기 하지 말고, 핵심 키워드만 뽑아서 제목화
-                - 질문 원문을 절대 그대로 베끼지 말 것 (핵심 개념만 압축)
-                - 답변은 오직 제목 텍스트만 출력 (불필요한 설명·접두어 금지)
-                                        
-                예시:
-                - 입력: "코드노바의 API 서버 기술스택알려줘"
-                    출력: 코드노바의 API 서버 기술스택
-                - 입력: "코드노바의 캐시 만료 시간은 어떤 기준으로 설정해야 하나요?"
-                    출력: 코드노바의 캐시 만료 시간
-            """
-
-            title_prompt = [
-                SystemMessage(content=title_system_prompt),
-                HumanMessage(
-                    content=json.dumps(
-                        history + [{"role": "assistant", "content": assistant_reply}],
-                        ensure_ascii=False,
-                    )
-                ),
-            ]
-
-            title_res = title_llm.invoke(title_prompt)
-            title = title_res.content.strip()
-            title = re.sub(r"<think>.*?</think>", "", title, flags=re.S)
-            title = title.replace("</think>", "").strip()
-
-            return assistant_reply, title
+            return assistant_reply
 
         except Exception as e:
             raise Exception(f"Failed to get response from AI: {str(e)}")

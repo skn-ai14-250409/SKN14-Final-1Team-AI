@@ -1,0 +1,14 @@
+.idea
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.dockerignore
+Dockerfile
+*.md
+*.sh
+*.yml
+.env
+db.sqlite3
