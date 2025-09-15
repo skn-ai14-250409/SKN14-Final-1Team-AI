@@ -207,7 +207,7 @@ def vector_search_tool(query: str, api_tags: List[str] = None) -> List[str]:
         filters["tags"] = {"$in": api_tags}
 
     print(f"검색 중: '{query}' with filters: {filters}")
-    results = vs.similarity_search(query, k=7, filter=filters)
+    results = vs.similarity_search(query, k=8, filter=filters)
 
     # 각 결과에서 page_content만 추출하여 반환
     return [result.page_content for result in results]
@@ -278,7 +278,7 @@ def qa_vector_search_tool(query: str, api_tags: List[str] = None) -> List[str]:
         filters["tags"] = {"$in": api_tags}
 
     print(f"검색 중: '{query}' with filters: {filters}")
-    results = qa_vs.similarity_search(query, k=7, filter=filters)
+    results = qa_vs.similarity_search(query, k=8, filter=filters)
     print(results)
 
     # 각 결과에서 page_content만 추출하여 반환
