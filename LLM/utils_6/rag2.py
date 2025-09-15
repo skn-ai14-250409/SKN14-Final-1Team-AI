@@ -73,7 +73,7 @@ def query_setting():
     return chain
 
 
-def classify_chain_setting():
+def classification_chain_setting():
     llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
     classification_prompt = PromptTemplate.from_template(
@@ -140,8 +140,7 @@ def classify_chain_setting():
 
     질문: {question}  
     정답:
-    """
-    )
+    """)
 
     classify_chain = classification_prompt | llm | StrOutputParser()
 
