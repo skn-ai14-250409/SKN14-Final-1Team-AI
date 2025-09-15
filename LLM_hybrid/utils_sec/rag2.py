@@ -23,8 +23,6 @@ def basic_chain_setting():
     
     예를 들어 gitflow가 뭔지 물어보면 답변할 수 없다고 해야 합니다.
     
-    **중요한 규칙**
-    
     
     원문 문서 : {context}
     
