@@ -73,120 +73,117 @@ embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
 
 # 툴 정의
 @tool(parse_docstring=True)
-def frontend_search(question: str) -> str:
+def frontend_search(keyword: str) -> str:
     """사내 벡터DB에서 특정 team 관련 문서를 검색합니다.
 
     Args:
-        question: 사용자가 입력한 질문
+        keyword: 사용자가 입력한 질문
     """
-    logger.info(f"frontend search question: {question}")
+    logger.info(f"frontend search keyword: {keyword}")
     try:
         # frontend team 기반 검색 수행
         vectorstore = Chroma(
             persist_directory=DB_DIR / "frontend", embedding_function=embedding_model
         )
-        results = vectorstore.similarity_search(question, k=10)
-        if not results:
+        docs = vectorstore.similarity_search(keyword, k=3)
+        if not docs:
             logger.info(f"frontend 관련된 답변을 찾지 못했습니다.")
             return f"frontend 관련된 답변을 찾지 못했습니다."
 
-        output = []
-        for i, result in enumerate(results, start=1):
-            output.append(
-                f"[frontend] Result {i}:\n"
-                f"Content: {result.page_content}\n"
-                f"Metadata: {result.metadata}"
-            )
-        logger.info(f"frontend search found {len(output)} results.")
-        return "\n\n".join(output)
+        ref_text = "\n".join(
+            [f"{doc.page_content} [[ref{idx+1}]]" for idx, doc in enumerate(docs)]
+        )
+        ref_text = f"검색 결과:\n-----\n{ref_text}"
+
+        logger.info(f"frontend search found {len(docs)} results.")
+        return ref_text
     except Exception as e:
         return f"frontend 검색 중 오류 발생: {e}"
 
 
 @tool(parse_docstring=True)
-def backend_search(question: str) -> str:
+def backend_search(keyword: str) -> str:
     """사내 벡터DB에서 특정 team 관련 문서를 검색합니다.
 
     Args:
-        question: 사용자가 입력한 질문
+        keyword: 사용자가 입력한 질문
     """
-    logger.info(f"backend search question: {question}")
+    logger.info(f"backend search keyword: {keyword}")
     try:
         # backend team 기반 검색 수행
         vectorstore = Chroma(
             persist_directory=DB_DIR / "backend", embedding_function=embedding_model
         )
-        results = vectorstore.similarity_search(question, k=10)
-        if not results:
+        docs = vectorstore.similarity_search(keyword, k=3)
+        if not docs:
             logger.info(f"backend 관련된 답변을 찾지 못했습니다.")
             return f"backend 관련된 답변을 찾지 못했습니다."
 
-        output = []
-        for i, result in enumerate(results, start=1):
-            output.append(
-                f"[backend] Result {i}:\n"
-                f"Content: {result.page_content}\n"
-                f"Metadata: {result.metadata}"
-            )
-        logger.info(f"backend search found {len(output)} results.")
-        return "\n\n".join(output)
+        ref_text = "\n".join(
+            [f"{doc.page_content} [[ref{idx+1}]]" for idx, doc in enumerate(docs)]
+        )
+        ref_text = f"검색 결과:\n-----\n{ref_text}"
+
+        logger.info(f"backend search found {len(docs)} results.")
+        return ref_text
     except Exception as e:
         return f"backend 검색 중 오류 발생: {e}"
 
 
 @tool(parse_docstring=True)
-def data_ai_search(question: str) -> str:
+def data_ai_search(keyword: str) -> str:
     """사내 벡터DB에서 특정 team 관련 문서를 검색합니다.
 
     Args:
-        question: 사용자가 입력한 질문
+        keyword: 사용자가 입력한 질문
     """
-    logger.info(f"data_ai search question: {question}")
+    logger.info(f"data_ai search keyword: {keyword}")
     try:
         # data_ai team 기반 검색 수행
         vectorstore = Chroma(
             persist_directory=DB_DIR / "data_ai", embedding_function=embedding_model
         )
-        results = vectorstore.similarity_search(question, k=10)
-        if not results:
+        docs = vectorstore.similarity_search(keyword, k=3)
+        if not docs:
             logger.info(f"data_ai 관련된 답변을 찾지 못했습니다.")
             return f"data_ai 관련된 답변을 찾지 못했습니다."
 
-        output = []
-        for i, result in enumerate(results, start=1):
-            output.append(
-                f"[data_ai] Result {i}:\n"
-                f"Content: {result.page_content}\n"
-                f"Metadata: {result.metadata}"
-            )
-        logger.info(f"data_ai search found {len(output)} results.")
-        return "\n\n".join(output)
+        ref_text = "\n".join(
+            [f"{doc.page_content} [[ref{idx+1}]]" for idx, doc in enumerate(docs)]
+        )
+        ref_text = f"검색 결과:\n-----\n{ref_text}"
+
+        logger.info(f"data_ai search found {len(docs)} results.")
     except Exception as e:
         return f"data_ai 검색 중 오류 발생: {e}"
 
 
 @tool(parse_docstring=True)
-def cto_search(question: str) -> str:
+def cto_search(keyword: str) -> str:
     """CTO 관련 질문일 경우, cto와 모든 team(backend, frontend, data_ai)을 함께 검색합니다.
 
     Args:
-        question: 사용자가 입력한 질문
+        keyword: 사용자가 입력한 질문
     """
-    logger.info(f"CTO search question: {question}")
-    outputs = []
-    vectorstore = Chroma(
-        persist_directory=DB_DIR / "cto", embedding_function=embedding_model
-    )
-    results = vectorstore.similarity_search(question, k=10)
-    if results:
-        for i, result in enumerate(results, start=1):
-            outputs.append(
-                f"Result {i}:\n"
-                f"Content: {result.page_content}\n"
-                f"Metadata: {result.metadata}"
-            )
-    logger.info(f"CTO search found {len(outputs)} results.")
-    return "\n\n".join(outputs) if outputs else "CTO 관련된 답변을 찾지 못했습니다."
+    logger.info(f"CTO search keyword: {keyword}")
+    try:
+        # cto 기반 검색 수행
+        vectorstore = Chroma(
+            persist_directory=DB_DIR / "cto", embedding_function=embedding_model
+        )
+        docs = vectorstore.similarity_search(keyword, k=3)
+        if not docs:
+            logger.info(f"cto 관련된 답변을 찾지 못했습니다.")
+            return f"cto 관련된 답변을 찾지 못했습니다."
+
+        ref_text = "\n".join(
+            [f"{doc.page_content} [[ref{idx+1}]]" for idx, doc in enumerate(docs)]
+        )
+        ref_text = f"검색 결과:\n-----\n{ref_text}"
+
+        logger.info(f"cto search found {len(docs)} results.")
+    except Exception as e:
+        return f"cto 검색 중 오류 발생: {e}"
 
 
 # 서비스 클래스
