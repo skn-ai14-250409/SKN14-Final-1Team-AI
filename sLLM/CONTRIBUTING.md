@@ -44,6 +44,9 @@ curl -X GET "http://127.0.0.1:8001/"
 # post
 curl -X POST "http://localhost:8001/api/v1/chat" \
 -H "Content-Type: application/json" \
--d '{"history": [
-    {"role": "user", "content": "나 백앤드팀인데 코드노바의 API 서버 기술스택알려줘"}]}'
+-d '{
+    "permission":"backend",
+    "tone":"informal",
+    "history": [
+    {"role": "user", "content": "코드노바의 API 서버 기술스택알려줘"}]}'
 ```

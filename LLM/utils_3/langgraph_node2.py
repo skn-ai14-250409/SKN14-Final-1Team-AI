@@ -223,6 +223,7 @@ def simple(state: ChatState):
     ).strip()
 
     state["answer"] = answer
+    state["search_results"] = []
 
     return state  # 답변을 반환
 
@@ -252,5 +253,6 @@ def impossible(state: ChatState):
     ).strip()
 
     state["answer"] = answer
+    state["search_results"] = []
 
     return state  # 답변을 반환
