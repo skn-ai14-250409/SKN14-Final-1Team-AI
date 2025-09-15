@@ -223,7 +223,7 @@ class LangChainChatService:
             if permission == "cto":
                 # 툴 바인딩
                 llm_tools = self.llm.bind_tools([cto_search])
-                tool_prompt = f"사용자는 CTO며 반드시 cto_search 툴을 호출하세요."
+                tool_prompt = f"사용자는 cto이며 반드시 cto_search 툴을 호출하세요."
             elif permission == "frontend":
                 # 툴 바인딩
                 llm_tools = self.llm.bind_tools([frontend_search])
