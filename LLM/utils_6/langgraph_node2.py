@@ -5,7 +5,7 @@ from langchain_openai import ChatOpenAI
 from .rag2 import (
     basic_chain_setting,
     query_setting,
-    classify_chain_setting,
+    classification_chain_setting,
     simple_chain_setting,
     impossable_chain_setting,
 )
@@ -24,7 +24,7 @@ client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 basic_chain = basic_chain_setting()
 vs = retriever_setting()
 query_chain = query_setting()
-classification_chain = classify_chain_setting()
+classification_chain = classification_chain_setting()
 simple_chain = simple_chain_setting()
 imp_chain = impossable_chain_setting()
 
@@ -46,7 +46,7 @@ GOOGLE_API_OPTIONS = {
     "map": "Google Maps API (구글 맵 API)",
     "firestore": "Google Firestore API (구글 파이어스토어 API)",
     "drive": "Google Drive API (구글 드라이브 API)",
-    "firebase authentication": "Google Firebase API (구글 파이어베이스 API)",
+    "firebase_authentication": "Google Firebase API (구글 파이어베이스 API)",
     "gmail": "Gmail API (구글 메일 API)",
     "google_identity": "Google Identity API (구글 인증 API)",
     "calendar": "Google Calendar API (구글 캘린더 API)",
@@ -298,6 +298,7 @@ def simple(state: ChatState):
     ).strip()
 
     state["answer"] = answer
+    state['search_results'] = []
 
     return state  # 답변을 반환
 
@@ -327,5 +328,6 @@ def impossible(state: ChatState):
     ).strip()
 
     state["answer"] = answer
+    state['search_results'] = []
 
     return state  # 답변을 반환

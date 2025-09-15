@@ -1,0 +1,85 @@
+user_input,retrieved_contexts,response,reference,context_recall,faithfulness,factual_correctness(mode=f1)
+Analytics Hub 게시자와 목록 관리자 역할의 차이점은 무엇인가요?,[],"""Analytics Hub 게시자와 목록 관리자 역할의 차이점""은 제가 모르는 내용입니다. 일상 질문 혹은 구글 API 관련 질문만 답변드릴 수 있어요.","Analytics Hub 게시자 역할은 목록을 생성, 업데이트, 삭제하고 목록에 IAM 정책을 설정할 수 있습니다. 반면, Analytics Hub 목록 관리자 역할은 목록을 업데이트 및 삭제하고 목록에 IAM 정책을 설정할 수 있지만, 목록을 생성하는 권한은 없습니다. 즉, 게시자는 목록 생성 권한이 추가로 부여된다는 점이 주요 차이점입니다.",0.0,0.25,0.0
+BigQuery Studio 저장된 쿼리에 공개 액세스 권한을 방지하려면 어떻게 해야 하나요?,[],"죄송하지만, 제공된 문서에 관련 정보가 없기 때문에 BigQuery Studio 저장된 쿼리에 공개 액세스 권한을 방지하는 방법에 대해 답변드릴 수 없습니다. 다른 질문이 있으면 말씀해 주세요.","BigQuery Studio 저장된 쿼리에 공개 액세스 권한을 방지하려면 프로젝트에서 allAuthenticatedUsers 주 구성원을 제한해야 합니다. 이를 위해 iam.allowedPolicyMemberDomains 정책을 설정하고 allowed_values 목록에서 allAuthenticatedUsers를 삭제하면 됩니다. 이 정책을 적용하면 프로젝트의 모든 IAM 정책에서 allAuthenticatedUsers 주 구성원을 사용할 수 없으므로, BigQuery Studio 저장된 쿼리를 비롯한 모든 리소스에 대한 공개 액세스 권한이 부여되지 않습니다.",0.0,0.6666666666666666,0.0
+calendarId에 primary 키워드를 사용하면 어떤 캘린더에 접근할 수 있나요?,[],"죄송하지만, 제공된 문서에 관련된 정보가 없어서 ""calendarId에 primary 키워드를 사용하면 어떤 캘린더에 접근할 수 있나요?""라는 질문에 답변할 수 없습니다. 구글 API 문서에 대한 질문이 아니라면, 다른 일상적인 질문에 대해서는 답변드릴 수 있습니다.",calendarId에 primary 키워드를 사용하면 현재 로그인한 사용자의 기본 캘린더에 접근할 수 있습니다.,0.0,0.3333333333333333,0.0
+Google Drive API v3의 서비스 엔드포인트가 궁금해,[],"죄송하지만, 제공된 문서에 Google Drive API v3의 서비스 엔드포인트에 대한 정보가 포함되어 있지 않습니다. 따라서 이 질문에 대한 답변을 제공할 수 없습니다. 다른 질문이 있으면 말씀해 주세요!",Google Drive API v3의 서비스 엔드포인트는 https://www.googleapis.com 입니다.,0.0,0.6666666666666666,0.0
+files.create 메서드의 최대 파일 크기와 허용되는 미디어 MIME 유형은 무엇인가요? ,[],"죄송하지만, 제공된 문서에 관련 정보가 없기 때문에 files.create 메서드의 최대 파일 크기와 허용되는 미디어 MIME 유형에 대해 답변드릴 수 없습니다. 구글 API 문서를 직접 참조하시거나 구글의 공식 지원을 통해 확인해 보시기 바랍니다. 추가로 이미지 분석에 대한 질문이 포함되어 있지 않으므로, 이미지 분석 결과에 대한 답변은 제공할 수 없습니다. 다른 질문이 있으시면 말씀해 주세요.","files.create 메서드의 최대 파일 크기는 5,120GB입니다. 허용되는 미디어 MIME 유형은 */*로, 이는 모든 유효한 MIME 유형을 업로드할 수 있음을 의미합니다. 단, 실제로는 리터럴 */* 대신 유효한 MIME 유형을 지정해야 합니다.",0.0,0.0,0.44
+Firebase scrypt 해시 비밀번호를 사용한 사용자 가져오는 방법은?,[],"죄송하지만, 제공된 문서에 관련 정보가 없기 때문에 Firebase scrypt 해시 비밀번호를 사용한 사용자를 가져오는 방법에 대해 답변드릴 수 없습니다. 다른 질문이 있거나 일상적인 질문이 있다면 도와드리겠습니다.","Firebase scrypt 해시 비밀번호를 사용한 사용자를 가져오려면, 먼저 Firebase 콘솔의 사용자 탭에서 비밀번호 해시 매개변수를 확인해야 합니다. 그런 다음, 해당 매개변수(key, saltSeparator, rounds, memoryCost)를 사용하여 scrypt 해시 옵션을 구성하고, 사용자의 password_hash와 password_salt를 base64로 디코딩하여 ImportUserRecord에 입력합니다. 마지막으로, auth.import_users 함수를 사용해 사용자를 가져올 수 있습니다. 예시 코드는 아래와 같습니다.
+
+```Python
+users = [
+    auth.ImportUserRecord(
+        uid='some-uid',
+        email='user@example.com',
+        password_hash=base64.urlsafe_b64decode('password_hash'),
+        password_salt=base64.urlsafe_b64decode('salt')
+    ),
+]
+
+# All the parameters below can be obtained from the Firebase Console's ""Users""
+# section. Base64 encoded parameters must be decoded into raw bytes.
+hash_alg = auth.UserImportHash.scrypt(
+    key=base64.b64decode('base64_secret'),
+    salt_separator=base64.b64decode('base64_salt_separator'),
+    rounds=8,
+    memory_cost=14
+)
+try:
+    result = auth.import_users(users, hash_alg=hash_alg)
+    for err in result.errors:
+        print('Failed to import user:', err.reason)
+except exceptions.FirebaseError as error:
+    print('Error importing users:', error)
+```
+이 과정을 통해 기존 Firebase 프로젝트에서 scrypt 해시 비밀번호를 사용한 사용자를 새로운 프로젝트로 마이그레이션할 수 있습니다.",0.0,,
+커스텀 인증 시스템으로 Firebase에 인증하려면 어떻게 해야 하나요?,[],"죄송하지만, 제공된 문서에 관련된 정보가 없기 때문에 Firebase에 커스텀 인증 시스템을 사용하는 방법에 대해 답변드릴 수 없습니다. 다른 질문이 있으면 말씀해 주세요.","커스텀 인증 시스템으로 Firebase에 인증하려면, 먼저 인증 서버에서 사용자의 로그인 인증 정보를 확인한 후 커스텀 Firebase 토큰을 생성해야 합니다. 그런 다음, 앱에서 이 토큰을 받아 signInWithCustomToken() 메서드에 전달하여 사용자를 로그인 처리할 수 있습니다. 예시 코드는 아래와 같습니다.
+
+```
+try {
+    final userCredential =
+        await FirebaseAuth.instance.signInWithCustomToken(token);
+    print(""Sign-in successful."");
+} on FirebaseAuthException catch (e) {
+    switch (e.code) {
+        case ""invalid-custom-token"":
+            print(""The supplied token is not a Firebase custom auth token."");
+            break;
+        case ""custom-token-mismatch"":
+            print(""The supplied token is for a different Firebase project."");
+            break;
+        default:
+            print(""Unknown error."");
+    }
+}
+```
+이 과정을 완료하면 사용자가 Firebase에 정상적으로 인증됩니다.",0.0,0.6666666666666666,0.0
+"Firestore에서 맵 필드에 대한 단일 필드 색인 예외를 설정하면, 하위 필드들은 그 설정을 상속하나요?",[],"죄송하지만, 제공된 문서에 해당 질문에 대한 정보가 포함되어 있지 않습니다. Firestore의 맵 필드에 대한 단일 필드 색인 예외 설정과 관련된 정보는 구글의 공식 Firestore 문서를 참조하시기 바랍니다. 추가적인 도움이 필요하시면 구글의 지원 페이지를 방문해 보세요.","네, Firestore에서 맵 필드에 단일 필드 색인 예외를 만들면 맵의 하위 필드들은 해당 설정을 상속합니다. 하지만 특정 하위 필드에 대해 별도로 단일 필드 색인 예외를 정의할 수도 있습니다.",0.0,0.0,0.0
+Firebase의 updateTime 필드에 사용되는 시간 형식이 뭐야?,[],"죄송하지만, 제공된 문서에 Firebase의 updateTime 필드에 대한 정보가 포함되어 있지 않기 때문에 정확한 답변을 드릴 수 없습니다. Firebase 관련 문서를 참고하시거나, 구체적인 정보를 제공해 주시면 도움이 될 수 있습니다.","Firebase의 updateTime 필드에는 RFC 3339 시간 형식이 사용됩니다. 이 형식은 Z-normalized를 기본으로 하며, 0, 3, 6 또는 9자리 소수점까지 지원합니다. 또한 'Z' 이외의 오프셋도 허용됩니다.",,0.0,0.0
+Firefox 58 환경에서 Gmail의 AMP 렌더링 기능이 호환되나요?,[],"""대답할 수 없어요.""","네, Firefox 58 환경에서는 Gmail의 AMP 렌더링 기능이 호환됩니다. 문서에 따르면 Firefox 58이 Gmail의 지원되는 최소 버전이기 때문에 AMP 렌더링이 정상적으로 동작합니다.",0.0,0.0,0.0
+Gmail 자가 테스트를 할 때 DKIM 또는 SPF 인증이 필요해?,[],"""Gmail 인증 테스트에 필요한 요소""는 제가 모르는 내용입니다. 일상 질문 혹은 구글 API 관련 질문만 답변드릴 수 있어요.","네, Gmail 자가 테스트를 할 때 DKIM 또는 SPF 인증이 여전히 필요합니다.",0.0,0.0,0.0
+"HTML 헤더에 스크립트 태그를 넣을 수 없을 때, 이메일 본문에 코드를 삽입하는 방법은?",[],이메일 본문에 코드를 삽입하는 방법은 제가 모르는 내용입니다. 일상 질문 혹은 구글 API 관련 질문만 답변드릴 수 있어요.,"HTML 헤더에 스크립트 태그를 넣을 수 없는 경우, 이메일 본문에 스크립트 태그의 일부 또는 전체를 삽입할 수 있습니다. 예를 들어, 거래 정보를 처리하는 시스템 부분에서 전체 스크립트 태그 또는 거래 <script>{""@type"": ""DiscountOffer"", …}</script>가 포함된 부분을 본문에 삽입하면 됩니다. 또한, 마이크로데이터(microdata) 방식을 사용하여 <div itemscope itemtype=""http://schema.org/DiscountOffer"">와 같이 HTML의 어느 곳에나 삽입할 수도 있습니다.",0.0,0.0,0.0
+OAuth에서 승인 사용자 인증 정보 만드는 방법 순서대로 알려주세요.,[],"죄송하지만, 제공된 문서에 OAuth에서 승인 사용자 인증 정보를 만드는 방법에 대한 정보가 포함되어 있지 않습니다. 따라서 이 질문에 대한 답변을 제공할 수 없습니다. 다른 질문이 있으면 말씀해 주세요!","OAuth에서 승인 사용자 인증 정보를 만드는 방법은 다음과 같습니다. 먼저, '클라이언트 만들기'를 클릭합니다. 다음으로, 'TV 및 입력 제한 기기 애플리케이션 유형'을 선택합니다. 마지막으로, OAuth 2.0 클라이언트의 이름을 지정하고 '만들기'를 클릭하면 완료됩니다.",0.0,0.0,0.0
+Google의 계정 간 보안 서비스를 사용하는데 디코딩된 보안 이벤트 토큰의 events 클레임에는 어떤 정보가 포함되어 있나요? 그리고 디코딩된 보안 이벤트 토큰의 예시도 알려주세요.,[],"죄송하지만, 제공된 문서에 관련 정보가 없기 때문에 Google의 계정 간 보안 서비스의 디코딩된 보안 이벤트 토큰의 ""events"" 클레임에 포함된 정보나 예시에 대해 답변드릴 수 없습니다. 다른 질문이 있으시면 말씀해 주세요.","디코딩된 보안 이벤트 토큰의 events 클레임에는 토큰이 나타내는 보안 이벤트에 관한 정보가 포함됩니다. 이 클레임은 이벤트 유형 식별자에서 이 이벤트와 관련된 사용자를 지정하는 subject 클레임으로, 그리고 사용 가능한 이벤트에 관한 추가 세부정보로의 매핑입니다. 예를 들어, 아래와 같은 디코딩된 보안 이벤트 토큰 예시가 있습니다:
+
+{
+  ""iss"": ""https://accounts.google.com/"",
+  ""aud"": ""123456789-abcedfgh.apps.googleusercontent.com"",
+  ""iat"": 1508184845,
+  ""jti"": ""756E69717565206964656E746966696572"",
+  ""events"": {
+    ""https://schemas.openid.net/secevent/risc/event-type/account-disabled"": {
+      ""subject"": {
+        ""subject_type"": ""iss-sub"",
+        ""iss"": ""https://accounts.google.com/"",
+        ""sub"": ""7375626A656374""
+      },
+      ""reason"": ""hijacking""
+    }
+  }
+}",0.0,1.0,0.0
+MAP 3D 스토리텔링의 '표지'를 구성하기 위해 config.json 파일에 직접 추가할 수 있는 속성들은 무엇인가요?,[],'MAP 3D 스토리텔링의 config.json 파일 속성'은 제가 모르는 내용입니다. 일상 질문 혹은 구글 api 관련 질문만 답변드릴 수 있어요.,"MAP 3D 스토리텔링의 '표지'를 구성하기 위해 config.json 파일에 직접 추가할 수 있는 속성들은 imageUrl, title, date, description, createdBy, imageCredit, cameraOptions입니다.",0.0,0.0,0.0
+"GMSMapPoint의 좌표계에서 (0, 0)은 어떤 지점을 의미하나요?",[],"죄송하지만, 제공된 문서에 관련된 정보가 없기 때문에 GMSMapPoint의 좌표계에서 (0, 0)이 어떤 지점을 의미하는지에 대해 답변드릴 수 없습니다. 다른 질문이 있으시면 말씀해 주세요.","(0, 0)은 GMSMapPoint 좌표계에서 지도의 중심을 의미합니다.",0.0,1.0,0.0
+People API의 RequestMask 필드에 무엇을 입력해야 하나요?,[],"죄송하지만, 제공된 문서에 관련 정보가 없기 때문에 People API의 RequestMask 필드에 대해 답변드릴 수 없습니다. 구글의 공식 API 문서를 참고하시거나, 구글 개발자 지원팀에 문의해 보시는 것을 추천드립니다. 다른 질문이 있으시면 말씀해 주세요!",지원 중단되었습니다. 대신 personFields를 사용해 주세요.,0.0,0.4,0.5
+People API에 요청을 보내는 Python 스크립트를 어떻게 실행하고 구성해야 하는지 알려줘,[],"죄송하지만, 제공된 문서에 관련된 내용이 없기 때문에 People API에 요청을 보내는 Python 스크립트를 실행하고 구성하는 방법에 대해 답변드릴 수 없습니다. 다른 질문이 있으면 말씀해 주세요!","People API에 요청을 보내는 Python 스크립트를 실행하고 구성하려면 다음 단계를 따르면 됩니다. 먼저, Python용 Google 클라이언트 라이브러리를 설치해야 합니다. 그런 다음 작업 디렉터리에 quickstart.py라는 파일을 만들고, 제공된 샘플 코드를 해당 파일에 포함시킵니다. 이후 작업 디렉터리에서 'python3 quickstart.py' 명령어로 스크립트를 실행하면 됩니다. 처음 실행 시에는 Google 계정으로 로그인하고 액세스 권한을 승인해야 하며, 승인 정보는 파일 시스템에 저장되어 이후에는 승인 메시지가 다시 표시되지 않습니다.",0.0,0.0,0.0
+Google Sheets의 SERIAL_NUMBER 형식으로 1900년 2월 1일 오후 5시의 경우 어떻게 계산해? 일련번호는 어떤식으로 계산하는 거야?,[],"죄송하지만, 제공된 문서에 관련 정보가 없기 때문에 Google Sheets의 SERIAL_NUMBER 형식에 대한 구체적인 계산 방법을 설명드릴 수 없습니다. Google Sheets의 일련번호 계산에 대한 정보는 Google의 공식 문서를 참조하시기 바랍니다. 다른 질문이 있으면 언제든지 말씀해 주세요!","Google Sheets의 SERIAL_NUMBER 형식에서 1900년 2월 1일 오후 5시는 33.708333...으로 계산됩니다. 일련번호는 1899년 12월 30일을 기준으로 경과된 일수(정수 부분)와, 시간은 하루의 비율(소수 부분)로 계산합니다. 예를 들어, 1900년 2월 1일은 1899년 12월 30일로부터 33일이 경과했고, 오후 5시는 하루(24시간) 중 17/24이므로 0.708333...이 더해집니다. 따라서 일련번호는 33 + 17/24 = 33.708333...이 됩니다.",0.0,0.5,0.0
+YouTube Data API를 사용하는 프로젝트의 기본 할당량은 얼마인가요?,[],"죄송하지만, 제공된 문서에 YouTube Data API의 기본 할당량에 대한 정보가 포함되어 있지 않기 때문에 정확한 답변을 드릴 수 없습니다. YouTube Data API의 할당량에 대한 정보는 Google의 공식 문서를 참조하시기 바랍니다. 추가적인 질문이 있으시면 언제든지 말씀해 주세요.","YouTube Data API를 사용하는 프로젝트의 기본 할당량은 일일 10,000단위입니다. 이는 대부분의 API 사용자에게 충분한 양입니다.",0.0,0.0,0.0
