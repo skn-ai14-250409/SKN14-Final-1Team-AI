@@ -1,1 +1,3 @@
 .env
+**/qa_chroma_db
+**/chroma_db
