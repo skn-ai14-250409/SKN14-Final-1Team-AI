@@ -154,6 +154,7 @@ def data_ai_search(keyword: str) -> str:
         ref_text = f"검색 결과:\n-----\n{ref_text}"
 
         logger.info(f"data_ai search found {len(docs)} results.")
+        return ref_text
     except Exception as e:
         return f"data_ai 검색 중 오류 발생: {e}"
 
@@ -165,7 +166,7 @@ def cto_search(keyword: str) -> str:
     Args:
         keyword: 사용자가 입력한 질문
     """
-    logger.info(f"CTO search keyword: {keyword}")
+    logger.info(f"cto search keyword: {keyword}")
     try:
         # cto 기반 검색 수행
         vectorstore = Chroma(
@@ -182,6 +183,7 @@ def cto_search(keyword: str) -> str:
         ref_text = f"검색 결과:\n-----\n{ref_text}"
 
         logger.info(f"cto search found {len(docs)} results.")
+        return ref_text
     except Exception as e:
         return f"cto 검색 중 오류 발생: {e}"
 
@@ -314,7 +316,7 @@ class LangChainChatService:
                         result = cto_search.invoke(call["arguments"])
                         state.append(
                             ToolMessage(
-                                tool_call_id=call.get("id", "extra2"), content=result
+                                tool_call_id=call.get("id", "extra1"), content=result
                             )
                         )
                         logger.info("cto_search tool Response Success")
