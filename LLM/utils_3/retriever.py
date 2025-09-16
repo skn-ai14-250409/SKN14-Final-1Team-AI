@@ -68,7 +68,7 @@ def retriever_setting(force_download=False):
                 "\n\n1. map: Google Maps API (구글 맵 API)"
                 "\n2. firestore: Google Firestore API (구글 파이어스토어 API)"
                 "\n3. drive: Google Drive API (구글 드라이브 API)"
-                "\n4. firebase: Google Firebase API (구글 파이어베이스 API)"
+                "\n4. firebase_authentication: Google Firebase API (구글 파이어베이스 API)"
                 "\n5. gmail: Gmail API (구글 메일 API)"
                 "\n6. google_identity: Google Identity API (구글 인증 API)"
                 "\n7. calendar: Google Calendar API (구글 캘린더 API)"

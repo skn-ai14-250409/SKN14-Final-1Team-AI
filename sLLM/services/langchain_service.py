@@ -18,14 +18,24 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 from models.chat_model import ChatRequest
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-DB_DIR = os.path.join(HERE, "chroma_db")
-DRIVE_URL = "https://drive.google.com/drive/folders/1STUOUcZWZatvaK54_B9qxv0mEEjYAub0"
+load_dotenv()
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# 구글 드라이브 폴더 링크
+DRIVE_URLS = {
+    "cto": "https://drive.google.com/drive/folders/1STUOUcZWZatvaK54_B9qxv0mEEjYAub0",
+    "backend": "https://drive.google.com/drive/folders/1WE9G9OxVghL26-4_CsXjbXmrv_4hi1Px?usp=sharing",
+    "frontend": "https://drive.google.com/drive/folders/1SJYDdkSrHSKsy4ZoMTt-3-8tweAR6_A1?usp=sharing",
+    "data_ai": "https://drive.google.com/drive/folders/1i6RymMjAWqmAkOd3o2JhikI6sQ5JxKPj?usp=sharing",
+}
+
+HERE = Path(__file__).resolve().parent
+DB_DIR = HERE / "chroma_db"
 
 
-# 구글 드라이브 링크 안에 있는 파일을 통으로 가져와서 chroma_db 폴더에 넣기
 def download_drive_folder_to_chroma_db(folder_url: str, target_dir: Path):
-    target_dir = Path(target_dir).resolve()
     target_dir.mkdir(parents=True, exist_ok=True)
 
     with tempfile.TemporaryDirectory() as td:
@@ -44,71 +54,136 @@ def download_drive_folder_to_chroma_db(folder_url: str, target_dir: Path):
 
 
 def create_chroma_db():
-    HERE = Path(__file__).resolve().parent
-    download_drive_folder_to_chroma_db(DRIVE_URL, HERE / "chroma_db")
+    DB_DIR.mkdir(parents=True, exist_ok=True)
+
+    for name, url in DRIVE_URLS.items():
+        subdir = DB_DIR / name
+        if not subdir.exists():
+            logger.info(f"Downloading {name} ...")
+            download_drive_folder_to_chroma_db(url, subdir)
+        else:
+            logger.info(f"{name} already exists")
 
 
 if not os.path.isdir(DB_DIR):
     create_chroma_db()
 
-load_dotenv()
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
-vectorstore = Chroma(persist_directory=DB_DIR, embedding_function=embedding_model)
 
 
 # 툴 정의
 @tool(parse_docstring=True)
-def team_search(question: str, team: str) -> str:
+def frontend_search(keyword: str) -> str:
     """사내 벡터DB에서 특정 team 관련 문서를 검색합니다.
 
     Args:
-        question: 사용자가 입력한 질문
-        team: 검색할 팀/직급 (예: 'frontend', 'backend', 'data_ai')
+        keyword: 사용자가 입력한 질문
     """
-    logger.info(f"{team} search question: {question}")
+    logger.info(f"frontend search keyword: {keyword}")
     try:
-        # team 기반 검색 수행
-        results = vectorstore.similarity_search(question, k=10, filter={"role": team})
-        if not results:
-            logger.info(f"{team} 관련된 답변을 찾지 못했습니다.")
-            return f"{team} 관련된 답변을 찾지 못했습니다."
+        # frontend team 기반 검색 수행
+        vectorstore = Chroma(
+            persist_directory=DB_DIR / "frontend", embedding_function=embedding_model
+        )
+        docs = vectorstore.similarity_search(keyword, k=3)
+        if not docs:
+            logger.info(f"frontend 관련된 답변을 찾지 못했습니다.")
+            return f"frontend 관련된 답변을 찾지 못했습니다."
 
-        output = []
-        for i, result in enumerate(results, start=1):
-            output.append(
-                f"[{team}] Result {i}:\n"
-                f"Content: {result.page_content}\n"
-                f"Metadata: {result.metadata}"
-            )
-        logger.info(f"{team} search found {len(output)} results.")
-        return "\n\n".join(output)
+        ref_text = "\n".join(
+            [f"{doc.page_content} [[ref{idx+1}]]" for idx, doc in enumerate(docs)]
+        )
+        ref_text = f"검색 결과:\n-----\n{ref_text}"
+
+        logger.info(f"frontend search found {len(docs)} results.")
+        return ref_text
     except Exception as e:
-        return f"{team} 검색 중 오류 발생: {e}"
+        return f"frontend 검색 중 오류 발생: {e}"
 
 
 @tool(parse_docstring=True)
-def cto_search(question: str) -> str:
-    """CTO 관련 질문일 경우, 모든 team(cto, backend, frontend, data_ai)을 함께 검색합니다.
+def backend_search(keyword: str) -> str:
+    """사내 벡터DB에서 특정 team 관련 문서를 검색합니다.
 
     Args:
-        question: 사용자가 입력한 질문
+        keyword: 사용자가 입력한 질문
     """
-    logger.info(f"CTO search question: {question}")
-    outputs = []
-    results = vectorstore.similarity_search(question, k=10)
-    if results:
-        for i, result in enumerate(results, start=1):
-            outputs.append(
-                f"Result {i}:\n"
-                f"Content: {result.page_content}\n"
-                f"Metadata: {result.metadata}"
-            )
-    logger.info(f"CTO search found {len(outputs)} results.")
-    return "\n\n".join(outputs) if outputs else "CTO 관련된 답변을 찾지 못했습니다."
+    logger.info(f"backend search keyword: {keyword}")
+    try:
+        # backend team 기반 검색 수행
+        vectorstore = Chroma(
+            persist_directory=DB_DIR / "backend", embedding_function=embedding_model
+        )
+        docs = vectorstore.similarity_search(keyword, k=3)
+        if not docs:
+            logger.info(f"backend 관련된 답변을 찾지 못했습니다.")
+            return f"backend 관련된 답변을 찾지 못했습니다."
+
+        ref_text = "\n".join(
+            [f"{doc.page_content} [[ref{idx+1}]]" for idx, doc in enumerate(docs)]
+        )
+        ref_text = f"검색 결과:\n-----\n{ref_text}"
+
+        logger.info(f"backend search found {len(docs)} results.")
+        return ref_text
+    except Exception as e:
+        return f"backend 검색 중 오류 발생: {e}"
+
+
+@tool(parse_docstring=True)
+def data_ai_search(keyword: str) -> str:
+    """사내 벡터DB에서 특정 team 관련 문서를 검색합니다.
+
+    Args:
+        keyword: 사용자가 입력한 질문
+    """
+    logger.info(f"data_ai search keyword: {keyword}")
+    try:
+        # data_ai team 기반 검색 수행
+        vectorstore = Chroma(
+            persist_directory=DB_DIR / "data_ai", embedding_function=embedding_model
+        )
+        docs = vectorstore.similarity_search(keyword, k=3)
+        if not docs:
+            logger.info(f"data_ai 관련된 답변을 찾지 못했습니다.")
+            return f"data_ai 관련된 답변을 찾지 못했습니다."
+
+        ref_text = "\n".join(
+            [f"{doc.page_content} [[ref{idx+1}]]" for idx, doc in enumerate(docs)]
+        )
+        ref_text = f"검색 결과:\n-----\n{ref_text}"
+
+        logger.info(f"data_ai search found {len(docs)} results.")
+    except Exception as e:
+        return f"data_ai 검색 중 오류 발생: {e}"
+
+
+@tool(parse_docstring=True)
+def cto_search(keyword: str) -> str:
+    """CTO 관련 질문일 경우, cto와 모든 team(backend, frontend, data_ai)을 함께 검색합니다.
+
+    Args:
+        keyword: 사용자가 입력한 질문
+    """
+    logger.info(f"CTO search keyword: {keyword}")
+    try:
+        # cto 기반 검색 수행
+        vectorstore = Chroma(
+            persist_directory=DB_DIR / "cto", embedding_function=embedding_model
+        )
+        docs = vectorstore.similarity_search(keyword, k=3)
+        if not docs:
+            logger.info(f"cto 관련된 답변을 찾지 못했습니다.")
+            return f"cto 관련된 답변을 찾지 못했습니다."
+
+        ref_text = "\n".join(
+            [f"{doc.page_content} [[ref{idx+1}]]" for idx, doc in enumerate(docs)]
+        )
+        ref_text = f"검색 결과:\n-----\n{ref_text}"
+
+        logger.info(f"cto search found {len(docs)} results.")
+    except Exception as e:
+        return f"cto 검색 중 오류 발생: {e}"
 
 
 # 서비스 클래스
@@ -148,11 +223,19 @@ class LangChainChatService:
             if permission == "cto":
                 # 툴 바인딩
                 llm_tools = self.llm.bind_tools([cto_search])
-                tool_prompt = f"사용자는 CTO며 반드시 cto_search 툴을 호출하세요."
-            elif permission in ["backend", "frontend", "data_ai"]:
+                tool_prompt = f"사용자는 cto이며 반드시 cto_search 툴을 호출하세요."
+            elif permission == "frontend":
                 # 툴 바인딩
-                llm_tools = self.llm.bind_tools([team_search])
-                tool_prompt = f"사용자는 {permission}팀이며 반드시 team={permission}으로 team_search 툴을 호출하세요."
+                llm_tools = self.llm.bind_tools([frontend_search])
+                tool_prompt = f"사용자는 {permission}팀이며 반드시 frontend_search 툴을 호출하세요."
+            elif permission == "backend":
+                # 툴 바인딩
+                llm_tools = self.llm.bind_tools([backend_search])
+                tool_prompt = f"사용자는 {permission}팀이며 반드시 backend_search 툴을 호출하세요."
+            elif permission == "data_ai":
+                # 툴 바인딩
+                llm_tools = self.llm.bind_tools([data_ai_search])
+                tool_prompt = f"사용자는 {permission}팀이며 반드시 data_ai_search 툴을 호출하세요."
             else:
                 llm_tools = self.llm.bind_tools([])
                 tool_prompt = f""
@@ -203,14 +286,30 @@ class LangChainChatService:
 
             if extra_calls:
                 for call in extra_calls:
-                    if call["name"] == "team_search":
-                        result = team_search.invoke(call["arguments"])
+                    if call["name"] == "frontend_search":
+                        result = frontend_search.invoke(call["arguments"])
                         state.append(
                             ToolMessage(
                                 tool_call_id=call.get("id", "extra1"), content=result
                             )
                         )
-                        logger.info("team_search (parsed) tool Response Success")
+                        logger.info("frontend_search tool Response Success")
+                    if call["name"] == "backend_search":
+                        result = backend_search.invoke(call["arguments"])
+                        state.append(
+                            ToolMessage(
+                                tool_call_id=call.get("id", "extra1"), content=result
+                            )
+                        )
+                        logger.info("backend_search tool Response Success")
+                    if call["name"] == "data_ai_search":
+                        result = data_ai_search.invoke(call["arguments"])
+                        state.append(
+                            ToolMessage(
+                                tool_call_id=call.get("id", "extra1"), content=result
+                            )
+                        )
+                        logger.info("data_ai_search tool Response Success")
                     elif call["name"] == "cto_search":
                         result = cto_search.invoke(call["arguments"])
                         state.append(
@@ -218,7 +317,7 @@ class LangChainChatService:
                                 tool_call_id=call.get("id", "extra2"), content=result
                             )
                         )
-                        logger.info("cto_search (parsed) tool Response Success")
+                        logger.info("cto_search tool Response Success")
 
                 # 툴 결과 반영 후 재호출
                 llm_res = llm_tools.invoke(state)
