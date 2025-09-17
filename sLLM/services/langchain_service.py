@@ -224,23 +224,19 @@ class LangChainChatService:
 
             # permission별 툴 선택
             if permission == "cto":
-                # 툴 바인딩
-                llm_tools = self.llm.bind_tools([cto_search])
+                tool_map = {"cto_search": cto_search}
                 tool_prompt = f"사용자는 cto이며 반드시 cto_search 툴을 호출하세요."
             elif permission == "frontend":
-                # 툴 바인딩
-                llm_tools = self.llm.bind_tools([frontend_search])
+                tool_map = {"frontend_search": frontend_search}
                 tool_prompt = f"사용자는 {permission}팀이며 반드시 frontend_search 툴을 호출하세요."
             elif permission == "backend":
-                # 툴 바인딩
-                llm_tools = self.llm.bind_tools([backend_search])
+                tool_map = {"backend_search": backend_search}
                 tool_prompt = f"사용자는 {permission}팀이며 반드시 backend_search 툴을 호출하세요."
             elif permission == "data_ai":
-                # 툴 바인딩
-                llm_tools = self.llm.bind_tools([data_ai_search])
+                tool_map = {"data_ai_search": data_ai_search}
                 tool_prompt = f"사용자는 {permission}팀이며 반드시 data_ai_search 툴을 호출하세요."
             else:
-                llm_tools = self.llm.bind_tools([])
+                tool_map = {}
                 tool_prompt = f""
             logger.info(f"Tools Prompt: {tool_prompt}")
 
@@ -270,7 +266,7 @@ class LangChainChatService:
             형식을 리턴한다.
             """
 
-            llm_tool = llm_tools.invoke(state)
+            llm_tool = self.llm.invoke(state)
             logger.info("LLM Tool Parse Response Success")
             state.append(llm_tool)
 
@@ -279,8 +275,6 @@ class LangChainChatService:
             matches = re.findall(
                 r"<tool_call>\s*(\{.*?\})\s*</tool_call>", assistant_reply, flags=re.S
             )
-            logger.info("LLM Tools Match")
-            logger.info(matches)
 
             extra_calls = []
             for m in matches:
@@ -288,6 +282,7 @@ class LangChainChatService:
                     extra_calls.append(json.loads(m))
                 except json.JSONDecodeError as e:
                     logger.warning(f"Tool call JSON decode 실패: {m} ({e})")
+            logger.info(f"LLM Tools Match : {len(extra_calls)}")
 
             # 툴 이름과 실제 함수 매핑
             tool_map = {
@@ -298,21 +293,28 @@ class LangChainChatService:
             }
 
             if extra_calls:
+                tool_results = []
                 for call in extra_calls:
                     tool_name = call["name"]
                     tool_func = tool_map.get(tool_name)
                     if tool_func:
                         result = tool_func.invoke(call["arguments"])
-                        result = f"<tool_response>{result}</tool_response>"
-                        state.append(
-                            HumanMessage(
-                                content=result,
-                            )
-                        )
+                        tool_results.append(f"<tool_response>{result}</tool_response>")
                         logger.info(f"{tool_name} tool Response Success")
+                    else:
+                        result = None
+                        tool_results.append(f"<tool_response>{result}</tool_response>")
+                        logger.info(f"{tool_name} tool Response Fail")
 
+                # 여러 개 결과를 하나의 메시지로 합치기
+                combined_result = "\n".join(tool_results)
+                state.append(
+                    HumanMessage(
+                        content=combined_result,
+                    )
+                )
                 # 툴 결과 반영 후 재호출
-                llm_res = llm_tools.invoke(state)
+                llm_res = self.llm.invoke(state)
                 state.append(llm_res)
 
             # 최종 답변 정리
