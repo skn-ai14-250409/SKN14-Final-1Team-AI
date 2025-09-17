@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+import uuid
 import gdown
 import os, shutil, tempfile
 from pathlib import Path
@@ -286,40 +287,28 @@ class LangChainChatService:
                 except json.JSONDecodeError:
                     pass
 
+            # 툴 이름과 실제 함수 매핑
+            tool_map = {
+                "frontend_search": frontend_search,
+                "backend_search": backend_search,
+                "data_ai_search": data_ai_search,
+                "cto_search": cto_search,
+            }
+
             if extra_calls:
                 for call in extra_calls:
-                    if call["name"] == "frontend_search":
-                        result = frontend_search.invoke(call["arguments"])
+                    tool_name = call["name"]
+                    tool_func = tool_map.get(tool_name)
+                    if tool_func:
+                        result = tool_func.invoke(call["arguments"])
                         state.append(
                             ToolMessage(
-                                tool_call_id=call.get("id", "extra1"), content=result
+                                tool_call_id=call.get("id")
+                                or f"gen_{uuid.uuid4().hex}",
+                                content=result or "",
                             )
                         )
-                        logger.info("frontend_search tool Response Success")
-                    if call["name"] == "backend_search":
-                        result = backend_search.invoke(call["arguments"])
-                        state.append(
-                            ToolMessage(
-                                tool_call_id=call.get("id", "extra1"), content=result
-                            )
-                        )
-                        logger.info("backend_search tool Response Success")
-                    if call["name"] == "data_ai_search":
-                        result = data_ai_search.invoke(call["arguments"])
-                        state.append(
-                            ToolMessage(
-                                tool_call_id=call.get("id", "extra1"), content=result
-                            )
-                        )
-                        logger.info("data_ai_search tool Response Success")
-                    elif call["name"] == "cto_search":
-                        result = cto_search.invoke(call["arguments"])
-                        state.append(
-                            ToolMessage(
-                                tool_call_id=call.get("id", "extra1"), content=result
-                            )
-                        )
-                        logger.info("cto_search tool Response Success")
+                        logger.info(f"{tool_name} tool Response Success")
 
                 # 툴 결과 반영 후 재호출
                 llm_res = llm_tools.invoke(state)
