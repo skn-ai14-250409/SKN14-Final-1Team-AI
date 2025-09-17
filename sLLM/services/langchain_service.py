@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+import uuid
 import gdown
 import os, shutil, tempfile
 from pathlib import Path
@@ -270,7 +271,7 @@ class LangChainChatService:
             """
 
             llm_tool = llm_tools.invoke(state)
-            logger.info("LLM Raw Response Success")
+            logger.info("LLM Tool Parse Response Success")
             state.append(llm_tool)
 
             # <tool_call> 분석
@@ -278,48 +279,37 @@ class LangChainChatService:
             matches = re.findall(
                 r"<tool_call>\s*(\{.*?\})\s*</tool_call>", assistant_reply, flags=re.S
             )
+            logger.info("LLM Tools Match")
+            logger.info(matches)
 
             extra_calls = []
             for m in matches:
                 try:
                     extra_calls.append(json.loads(m))
-                except json.JSONDecodeError:
-                    pass
+                except json.JSONDecodeError as e:
+                    logger.warning(f"Tool call JSON decode 실패: {m} ({e})")
+
+            # 툴 이름과 실제 함수 매핑
+            tool_map = {
+                "frontend_search": frontend_search,
+                "backend_search": backend_search,
+                "data_ai_search": data_ai_search,
+                "cto_search": cto_search,
+            }
 
             if extra_calls:
                 for call in extra_calls:
-                    if call["name"] == "frontend_search":
-                        result = frontend_search.invoke(call["arguments"])
+                    tool_name = call["name"]
+                    tool_func = tool_map.get(tool_name)
+                    if tool_func:
+                        result = tool_func.invoke(call["arguments"])
+                        result = f"<tool_response>{result}</tool_response>"
                         state.append(
-                            ToolMessage(
-                                tool_call_id=call.get("id", "extra1"), content=result
+                            HumanMessage(
+                                content=result,
                             )
                         )
-                        logger.info("frontend_search tool Response Success")
-                    if call["name"] == "backend_search":
-                        result = backend_search.invoke(call["arguments"])
-                        state.append(
-                            ToolMessage(
-                                tool_call_id=call.get("id", "extra1"), content=result
-                            )
-                        )
-                        logger.info("backend_search tool Response Success")
-                    if call["name"] == "data_ai_search":
-                        result = data_ai_search.invoke(call["arguments"])
-                        state.append(
-                            ToolMessage(
-                                tool_call_id=call.get("id", "extra1"), content=result
-                            )
-                        )
-                        logger.info("data_ai_search tool Response Success")
-                    elif call["name"] == "cto_search":
-                        result = cto_search.invoke(call["arguments"])
-                        state.append(
-                            ToolMessage(
-                                tool_call_id=call.get("id", "extra1"), content=result
-                            )
-                        )
-                        logger.info("cto_search tool Response Success")
+                        logger.info(f"{tool_name} tool Response Success")
 
                 # 툴 결과 반영 후 재호출
                 llm_res = llm_tools.invoke(state)
@@ -330,6 +320,7 @@ class LangChainChatService:
             assistant_reply = re.sub(
                 r"<think>.*?</think>", "", assistant_reply, flags=re.S
             )
+            assistant_reply = assistant_reply.replace("<think>", "").strip()
             assistant_reply = assistant_reply.replace("</think>", "").strip()
 
             logger.info("Final Assistant Reply Generated")
