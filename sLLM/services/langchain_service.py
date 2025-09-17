@@ -60,10 +60,10 @@ def create_chroma_db():
     for name, url in DRIVE_URLS.items():
         subdir = DB_DIR / name
         if not subdir.exists():
-            logger.info(f"Downloading {name} ...")
+            logger.info(f"-------- Downloading {name} ...")
             download_drive_folder_to_chroma_db(url, subdir)
         else:
-            logger.info(f"{name} already exists")
+            logger.info(f"-------- {name} already exists")
 
 
 if not os.path.isdir(DB_DIR):
@@ -80,7 +80,7 @@ def frontend_search(keyword: str) -> str:
     Args:
         keyword: 사용자가 입력한 질문
     """
-    logger.info(f"frontend search keyword: {keyword}")
+    logger.info(f"-------- frontend search keyword: {keyword}")
     try:
         # frontend team 기반 검색 수행
         vectorstore = Chroma(
@@ -88,7 +88,7 @@ def frontend_search(keyword: str) -> str:
         )
         docs = vectorstore.similarity_search(keyword, k=3)
         if not docs:
-            logger.info(f"frontend 관련된 답변을 찾지 못했습니다.")
+            logger.info(f"-------- frontend 관련된 답변을 찾지 못했습니다.")
             return f"frontend 관련된 답변을 찾지 못했습니다."
 
         ref_text = "\n".join(
@@ -96,7 +96,7 @@ def frontend_search(keyword: str) -> str:
         )
         ref_text = f"검색 결과:\n-----\n{ref_text}"
 
-        logger.info(f"frontend search found {len(docs)} results.")
+        logger.info(f"-------- frontend search found {len(docs)} results.")
         return ref_text
     except Exception as e:
         return f"frontend 검색 중 오류 발생: {e}"
@@ -109,7 +109,7 @@ def backend_search(keyword: str) -> str:
     Args:
         keyword: 사용자가 입력한 질문
     """
-    logger.info(f"backend search keyword: {keyword}")
+    logger.info(f"-------- backend search keyword: {keyword}")
     try:
         # backend team 기반 검색 수행
         vectorstore = Chroma(
@@ -117,7 +117,7 @@ def backend_search(keyword: str) -> str:
         )
         docs = vectorstore.similarity_search(keyword, k=3)
         if not docs:
-            logger.info(f"backend 관련된 답변을 찾지 못했습니다.")
+            logger.info(f"-------- backend 관련된 답변을 찾지 못했습니다.")
             return f"backend 관련된 답변을 찾지 못했습니다."
 
         ref_text = "\n".join(
@@ -125,7 +125,7 @@ def backend_search(keyword: str) -> str:
         )
         ref_text = f"검색 결과:\n-----\n{ref_text}"
 
-        logger.info(f"backend search found {len(docs)} results.")
+        logger.info(f"-------- backend search found {len(docs)} results.")
         return ref_text
     except Exception as e:
         return f"backend 검색 중 오류 발생: {e}"
@@ -138,7 +138,7 @@ def data_ai_search(keyword: str) -> str:
     Args:
         keyword: 사용자가 입력한 질문
     """
-    logger.info(f"data_ai search keyword: {keyword}")
+    logger.info(f"-------- data_ai search keyword: {keyword}")
     try:
         # data_ai team 기반 검색 수행
         vectorstore = Chroma(
@@ -146,7 +146,7 @@ def data_ai_search(keyword: str) -> str:
         )
         docs = vectorstore.similarity_search(keyword, k=3)
         if not docs:
-            logger.info(f"data_ai 관련된 답변을 찾지 못했습니다.")
+            logger.info(f"-------- data_ai 관련된 답변을 찾지 못했습니다.")
             return f"data_ai 관련된 답변을 찾지 못했습니다."
 
         ref_text = "\n".join(
@@ -154,7 +154,7 @@ def data_ai_search(keyword: str) -> str:
         )
         ref_text = f"검색 결과:\n-----\n{ref_text}"
 
-        logger.info(f"data_ai search found {len(docs)} results.")
+        logger.info(f"-------- data_ai search found {len(docs)} results.")
         return ref_text
     except Exception as e:
         return f"data_ai 검색 중 오류 발생: {e}"
@@ -167,7 +167,7 @@ def cto_search(keyword: str) -> str:
     Args:
         keyword: 사용자가 입력한 질문
     """
-    logger.info(f"cto search keyword: {keyword}")
+    logger.info(f"-------- cto search keyword: {keyword}")
     try:
         # cto 기반 검색 수행
         vectorstore = Chroma(
@@ -175,7 +175,7 @@ def cto_search(keyword: str) -> str:
         )
         docs = vectorstore.similarity_search(keyword, k=3)
         if not docs:
-            logger.info(f"cto 관련된 답변을 찾지 못했습니다.")
+            logger.info(f"-------- cto 관련된 답변을 찾지 못했습니다.")
             return f"cto 관련된 답변을 찾지 못했습니다."
 
         ref_text = "\n".join(
@@ -183,7 +183,7 @@ def cto_search(keyword: str) -> str:
         )
         ref_text = f"검색 결과:\n-----\n{ref_text}"
 
-        logger.info(f"cto search found {len(docs)} results.")
+        logger.info(f"-------- cto search found {len(docs)} results.")
         return ref_text
     except Exception as e:
         return f"cto 검색 중 오류 발생: {e}"
@@ -211,7 +211,7 @@ class LangChainChatService:
         history = request.history
         permission = request.permission
         tone = request.tone
-        logger.info(f"Chat Request - Permission: {permission}, Tone: {tone}")
+        logger.info(f"-------- Chat Request - Permission: {permission}, Tone: {tone}")
 
         try:
             # 톤별 가이드
@@ -224,25 +224,21 @@ class LangChainChatService:
 
             # permission별 툴 선택
             if permission == "cto":
-                # 툴 바인딩
-                llm_tools = self.llm.bind_tools([cto_search])
+                tool_map = {"cto_search": cto_search}
                 tool_prompt = f"사용자는 cto이며 반드시 cto_search 툴을 호출하세요."
             elif permission == "frontend":
-                # 툴 바인딩
-                llm_tools = self.llm.bind_tools([frontend_search])
+                tool_map = {"frontend_search": frontend_search}
                 tool_prompt = f"사용자는 {permission}팀이며 반드시 frontend_search 툴을 호출하세요."
             elif permission == "backend":
-                # 툴 바인딩
-                llm_tools = self.llm.bind_tools([backend_search])
+                tool_map = {"backend_search": backend_search}
                 tool_prompt = f"사용자는 {permission}팀이며 반드시 backend_search 툴을 호출하세요."
             elif permission == "data_ai":
-                # 툴 바인딩
-                llm_tools = self.llm.bind_tools([data_ai_search])
+                tool_map = {"data_ai_search": data_ai_search}
                 tool_prompt = f"사용자는 {permission}팀이며 반드시 data_ai_search 툴을 호출하세요."
             else:
-                llm_tools = self.llm.bind_tools([])
+                tool_map = {}
                 tool_prompt = f""
-            logger.info(f"Tools Prompt: {tool_prompt}")
+            logger.info(f"-------- Tools Prompt: {tool_prompt}")
 
             # 시스템 메시지 생성
             system_message = f"""
@@ -270,8 +266,8 @@ class LangChainChatService:
             형식을 리턴한다.
             """
 
-            llm_tool = llm_tools.invoke(state)
-            logger.info("LLM Tool Parse Response Success")
+            llm_tool = self.llm.invoke(state)
+            logger.info("-------- LLM Tool Parse Response Success")
             state.append(llm_tool)
 
             # <tool_call> 분석
@@ -279,8 +275,6 @@ class LangChainChatService:
             matches = re.findall(
                 r"<tool_call>\s*(\{.*?\})\s*</tool_call>", assistant_reply, flags=re.S
             )
-            logger.info("LLM Tools Match")
-            logger.info(matches)
 
             extra_calls = []
             for m in matches:
@@ -288,6 +282,7 @@ class LangChainChatService:
                     extra_calls.append(json.loads(m))
                 except json.JSONDecodeError as e:
                     logger.warning(f"Tool call JSON decode 실패: {m} ({e})")
+            logger.info(f"-------- LLM Tools Match : {len(extra_calls)}")
 
             # 툴 이름과 실제 함수 매핑
             tool_map = {
@@ -298,21 +293,28 @@ class LangChainChatService:
             }
 
             if extra_calls:
+                tool_results = []
                 for call in extra_calls:
                     tool_name = call["name"]
                     tool_func = tool_map.get(tool_name)
                     if tool_func:
                         result = tool_func.invoke(call["arguments"])
-                        result = f"<tool_response>{result}</tool_response>"
-                        state.append(
-                            HumanMessage(
-                                content=result,
-                            )
-                        )
-                        logger.info(f"{tool_name} tool Response Success")
+                        tool_results.append(f"<tool_response>{result}</tool_response>")
+                        logger.info(f"-------- {tool_name} tool Response Success")
+                    else:
+                        result = None
+                        tool_results.append(f"<tool_response>{result}</tool_response>")
+                        logger.info(f"-------- {tool_name} tool Response Fail")
 
+                # 여러 개 결과를 하나의 메시지로 합치기
+                combined_result = "\n".join(tool_results)
+                state.append(
+                    HumanMessage(
+                        content=combined_result,
+                    )
+                )
                 # 툴 결과 반영 후 재호출
-                llm_res = llm_tools.invoke(state)
+                llm_res = self.llm.invoke(state)
                 state.append(llm_res)
 
             # 최종 답변 정리
@@ -323,8 +325,8 @@ class LangChainChatService:
             assistant_reply = assistant_reply.replace("<think>", "").strip()
             assistant_reply = assistant_reply.replace("</think>", "").strip()
 
-            logger.info("Final Assistant Reply Generated")
-            logger.info(f"{assistant_reply}")
+            logger.info("-------- Final Assistant Reply Generated")
+            logger.info(f"-------- {assistant_reply}")
 
             # 제목 요약 생성
             title_llm = ChatOpenAI(
