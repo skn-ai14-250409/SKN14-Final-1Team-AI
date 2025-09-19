@@ -1,7 +1,6 @@
 import json
 import logging
 import re
-import uuid
 import gdown
 import os, shutil, tempfile
 from pathlib import Path
@@ -11,7 +10,6 @@ from langchain_core.messages import (
     SystemMessage,
     HumanMessage,
     AIMessage,
-    ToolMessage,
 )
 from langchain_core.tools import tool
 from langchain_chroma import Chroma
@@ -283,14 +281,6 @@ class LangChainChatService:
                 except json.JSONDecodeError as e:
                     logger.warning(f"Tool call JSON decode 실패: {m} ({e})")
             logger.info(f"-------- LLM Tools Match : {len(extra_calls)}")
-
-            # 툴 이름과 실제 함수 매핑
-            tool_map = {
-                "frontend_search": frontend_search,
-                "backend_search": backend_search,
-                "data_ai_search": data_ai_search,
-                "cto_search": cto_search,
-            }
 
             if extra_calls:
                 tool_results = []

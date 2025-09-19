@@ -1,0 +1,16 @@
+코드노바 프론트엔드 문서 — 생성 결과 목록
+01. frontend - 프론트엔드 아키텍처 문서 -> 01_frontend__프론트엔드_아키텍처_문서.txt
+02. frontend - API 연동 매뉴얼 -> 02_frontend__API_연동_매뉴얼.txt
+03. frontend - 빌드/배포 가이드 -> 03_frontend__빌드_배포_가이드.txt
+04. frontend - 코딩 컨벤션 & 스타일 가이드 -> 04_frontend__코딩_컨벤션_&_스타일_가이드.txt
+05. frontend - UI/UX 디자인 가이드라인 -> 05_frontend__UI_UX_디자인_가이드라인.txt
+06. frontend - 테스트 전략 및 QA 가이드 -> 06_frontend__테스트_전략_및_QA_가이드.txt
+07. frontend - 보안 가이드라인 -> 07_frontend__보안_가이드라인.txt
+08. frontend - 로그/모니터링 가이드 -> 08_frontend__로그_모니터링_가이드.txt
+09. frontend - 협업 프로세스 문서 -> 09_frontend__협업_프로세스_문서.txt
+10. frontend - 신규 입사자 온보딩 가이드 -> 10_frontend__신규_입사자_온보딩_가이드.txt
+11. meeting - 프론트엔드팀 주간 업무 계획 -> 11_meeting__프론트엔드팀_주간_업무_계획.txt
+12. meeting - 프론트엔드팀_회의록(정기회의) #1 -> 12_meeting__프론트엔드팀_회의록(정기회의)__1.txt
+13. meeting - 프론트엔드팀_회의록(정기회의) #2 -> 13_meeting__프론트엔드팀_회의록(정기회의)__2.txt
+14. frontend - 실패 사례 & 대응 기록 (Postmortem 문서) -> 14_frontend__실패_사례_&_대응_기록_(Postmortem_문서).txt
+15. frontend - 프로젝트/제품 릴리즈 노트 관리 문서 -> 15_frontend__프로젝트_제품_릴리즈_노트_관리_문서.txt

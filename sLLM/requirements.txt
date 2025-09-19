@@ -8,3 +8,4 @@ langchain_chroma
 langchain_huggingface
 sentence-transformers
 gdown
+urllib3
