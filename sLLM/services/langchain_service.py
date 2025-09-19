@@ -11,7 +11,6 @@ from langchain_core.messages import (
     HumanMessage,
     AIMessage,
 )
-from langchain_core.tools import tool
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
@@ -71,7 +70,6 @@ embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
 
 
 # 툴 정의
-@tool(parse_docstring=True)
 def frontend_search(keyword: str) -> str:
     """사내 벡터DB에서 특정 team 관련 문서를 검색합니다.
 
@@ -100,7 +98,6 @@ def frontend_search(keyword: str) -> str:
         return f"frontend 검색 중 오류 발생: {e}"
 
 
-@tool(parse_docstring=True)
 def backend_search(keyword: str) -> str:
     """사내 벡터DB에서 특정 team 관련 문서를 검색합니다.
 
@@ -129,7 +126,6 @@ def backend_search(keyword: str) -> str:
         return f"backend 검색 중 오류 발생: {e}"
 
 
-@tool(parse_docstring=True)
 def data_ai_search(keyword: str) -> str:
     """사내 벡터DB에서 특정 team 관련 문서를 검색합니다.
 
@@ -158,7 +154,6 @@ def data_ai_search(keyword: str) -> str:
         return f"data_ai 검색 중 오류 발생: {e}"
 
 
-@tool(parse_docstring=True)
 def cto_search(keyword: str) -> str:
     """CTO 관련 질문일 경우, cto와 모든 team(backend, frontend, data_ai)을 함께 검색합니다.
 
@@ -281,14 +276,6 @@ class LangChainChatService:
                 except json.JSONDecodeError as e:
                     logger.warning(f"Tool call JSON decode 실패: {m} ({e})")
             logger.info(f"-------- LLM Tools Match : {len(extra_calls)}")
-
-            # 툴 이름과 실제 함수 매핑
-            tool_map = {
-                "frontend_search": frontend_search,
-                "backend_search": backend_search,
-                "data_ai_search": data_ai_search,
-                "cto_search": cto_search,
-            }
 
             if extra_calls:
                 tool_results = []
