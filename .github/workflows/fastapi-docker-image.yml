@@ -26,8 +26,8 @@ jobs:
       - name: Docker build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./SLLM2
-          file: ./SLLM2/Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}:latest
 
