@@ -338,15 +338,24 @@ class LangChainChatService:
             형식을 리턴한다.
             """
 
+
+
             llm_tool = self.llm.invoke(state)
             logger.info("-------- LLM Tool Parse Response Success")
             state.append(llm_tool)
 
+            tool_calls = ""
+            tool_responses = ""
+
             # <tool_call> 분석
             assistant_reply = state[-1].content
+
             matches = re.findall(
                 r"<tool_call>\s*(\{.*?\})\s*</tool_call>", assistant_reply, flags=re.S
             )
+
+            if matches:
+                tool_calls = assistant_reply
 
             extra_calls = []
             for m in matches:
@@ -372,6 +381,7 @@ class LangChainChatService:
 
                 # 여러 개 결과를 하나의 메시지로 합치기
                 combined_result = "\n".join(tool_results)
+                tool_responses = combined_result
                 state.append(
                     HumanMessage(
                         content=combined_result,
@@ -435,7 +445,7 @@ class LangChainChatService:
             title = re.sub(r"<think>.*?</think>", "", title, flags=re.S)
             title = title.replace("</think>", "").strip()
 
-            return assistant_reply, title
+            return assistant_reply, title, tool_calls, tool_responses
 
         except Exception as e:
             raise Exception(f"Failed to get response from AI: {str(e)}")
