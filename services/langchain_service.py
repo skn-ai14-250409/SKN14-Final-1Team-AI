@@ -210,6 +210,7 @@ class LangChainChatService:
         permission = request.permission
         tone = request.tone
         logger.info(f"-------- Chat Request - Permission: {permission}, Tone: {tone}")
+        logger.info(f"-------- Chat History:{history}")
 
         try:
             # permission별 툴 선택
