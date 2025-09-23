@@ -1,0 +1,161 @@
+﻿query_id,query_text,relevant_doc_ids
+q1,빅쿼리 전송 구성하는 법?,10fd8ede-f032-4f97-9318-bd605f13d65e=3;7afaf444-187e-4c43-826f-29d1d3112408=2;4ad50acc-6b50-46fc-9bb2-de6269c45d1b=1
+q2,클라우드 저장소에서 데이터 전송 어떻게 해?,bbcf536f-0fda-4626-9b9f-fc6e9d2ddda4=2;1c7801ac-790e-4b4a-a705-abba9afda4cc=1;868401f0-00d1-4dcc-a660-613c6f963949=1
+q3,bq mk 명령어 사용법 뭐야?,16027f9c-cd3a-40d4-af73-bd2d978aea62=3;145a40c8-1014-4bba-8a4b-5e1f172651f4=2;f03ab504-aafe-4123-aa67-90bdf145baa7=1
+q4,마이그레이션 에이전트 실행하려면 뭐 필요해?,476fe45c-ab37-4922-90dd-9b692ca27a1e=3;8e724965-f081-4186-b9ba-2fc6b38265ba=2;e5229274-5e73-487a-9f4c-fb59edb61abd=2
+q5,빅쿼리 쿼리 실행하는 법?,f59867d8-945b-45a0-a059-ed8c8c451e88=3;ca352791-553a-41cc-8460-7dc8910c7afe=2;689c1fed-0c05-4e27-858f-203a11febaab=1
+q6,how to run queries on bigquery?,695147d8-2025-4bff-8a46-cdada8c3b8b0=3;
+q7,play_circle 버튼 뭐야?,3ee4d58b-bbed-4844-8582-ddb612dc8071=2;617f1e4d-017f-41a9-8419-907bdc6341ce=1;45f98840-3d4b-4850-a07f-f2a41a4bc86d=1
+q8,멀티모달 데이터 분석 방법?,b8c0efcd-b284-4128-b244-3356a874999b=3;e68bbcba-d8e8-4e7c-b296-5a16f0e664a8=2;a96a99c1-1ca6-49f4-90cd-befe5f276ee5=2
+q9,파이썬으로 빅쿼리 데이터 분석하기,96b56a51-45fd-4811-9b57-a8e500f92f33=3;c1fec693-7d4c-4803-a9e4-714545c7d075=2;9ce86fad-9a4a-4016-bd2a-faab81f92c1d=1
+q10,빅쿼리 데이터 캔버스에서 차트 어떻게 만들어요?,29a4afc1-d5e2-4be1-af25-67604fb1d93d=3;9cb413d8-1ef2-4535-b69a-ad30300bc830=2;5ac6bd23-4757-45d7-90b2-9da7debbfe14=1
+q11,데이터 캔버스 메타데이터는 어디서 보죠?,344e325f-9b89-414f-b4f6-0a52c905c832=3;5eaff06b-2c90-4022-b876-62b6a8e73e49=2;1f323dc8-6954-4cbd-9371-d0b693351296=2
+q12,막대 그래프 색깔 바꾸는 방법 뭐에요?,29a4afc1-d5e2-4be1-af25-67604fb1d93d=3;
+q13,hdfs 파일 클라우드로 어떻게 옮겨?,4bc2664e-fd30-426d-a59b-5cabbd9fad76=3;e60a654d-429b-4073-9e12-054b90423c50=2;985f2aa0-8eae-40d9-b1e3-58d7c57fc00e=2
+q14,bigquery에 데이터 로드하는 법,4537d9ef-71b3-44da-98f4-ee13098abdc5=3;9694dffd-5912-45d7-a05e-484ac3fe271a=2;53381e41-0e1c-4c3b-9d64-526b26cfbea3=2
+q15,hdfs에서 gs로 파일 복사할 때 요금 발생해?,f619937a-0d9b-4db0-a86c-ef9874f42794=3;
+q16,스테이징 디렉터리 삭제는 왜 필요한 거야?,750e2398-97f3-4ae5-9575-74161f4c5365=3;d500523e-e56b-4ab4-acc6-e5789591e139=2;c885f2c0-e4c1-4041-a6ac-b5ec287ab1fc=1
+q17,People API gradle 추가법,0d925e82-79f4-4e31-b617-14a86bfad027=3;5fefdaf5-7649-4164-acb2-a813a4359524=2;0932b423-2f69-487e-bdf6-07c8b9fd941b=2
+q18,google-api-services-people 버전 찾는 방법,0932b423-2f69-487e-bdf6-07c8b9fd941b=3;0d925e82-79f4-4e31-b617-14a86bfad027=2;5fefdaf5-7649-4164-acb2-a813a4359524=2
+q19,빅쿼리 물리적 뷰 만들기 어떻게 해?,95ae507a-4553-4f05-9e04-a0db5395b388=3;ee78b90b-6e92-48f3-8362-bfb573a7cdef=2;1c7801ac-790e-4b4a-a705-abba9afda4cc=1
+q20,maxStaleness 설정하는법 알려줘,87b2b0dc-5fd5-469d-804f-9552d4a25b8f=3;1a998a13-a1be-43d2-a372-5b2f583efcf3=2;fef0a030-edac-4d50-bc89-72eb9c7ee1a0=1
+q21,쿼리로 클릭수 합치는 방법 뭐야?,b1cbf6e6-d795-45a4-a7db-23cc934939ce=2;301f42b4-8395-4be0-be19-95e9609d1d07=2;
+q22,my_mv_table이 뭔지 궁금해,90c63f30-62ee-4d56-804f-50a968be7cec=3;7bc69f59-2a8b-41b5-af7d-0791c4310a84=2;fef0a030-edac-4d50-bc89-72eb9c7ee1a0=1
+q23,특수문자 어떤거 써도 돼?,fc77d39b-6627-48db-b677-99d88b2bf430=2;78484cac-f171-4735-a2ca-8b5eb51a707d=2;0b424c73-fd38-4b6c-8bd5-9d1fcbb526a4=2
+q24,bigquery 유연한 열 이름 쓰려면?,d0a07585-a327-4250-8817-b147f6392fca=3;598e0854-0092-485d-936c-10638eb0a1fe=2;df091e01-ac22-477a-a66b-05efadf89e9d=1
+q25,파케이 파일에서 마침표 대체 안되나?,8fdbaad6-9503-4764-bcbe-73cfaedf5516=3;0419b644-1f08-4cde-a45e-cd4864586b68=2;b0be88fd-2477-4d82-ba66-db0d7be53260=1
+q26,문서에 언급된 특수문자 리스트 있나?,0b424c73-fd38-4b6c-8bd5-9d1fcbb526a4=3;78484cac-f171-4735-a2ca-8b5eb51a707d=2;fc77d39b-6627-48db-b677-99d88b2bf430=2
+q27,유니코드 정규 표현식으로 잘 표현할 수 있는거 뭐야?,9d638e1d-e8a7-4f2a-87ef-3bcb8e770b50=3;0419b644-1f08-4cde-a45e-cd4864586b68=2;0384878d-cec2-4d22-a3eb-72f222a85857=2
+q28,firebase auth:import 하는법 뭐야?,ac5df4d6-38ac-42d3-b7c0-77157cba86b7=3;aa5e4c21-e146-4fda-b216-df0cf9838799=2;e42eaf66-1487-413d-a016-76a7c88430a5=2
+q29,users.json 파일로 사용자 가져오는거야?,ac5df4d6-38ac-42d3-b7c0-77157cba86b7=3;aa5e4c21-e146-4fda-b216-df0cf9838799=2;e42eaf66-1487-413d-a016-76a7c88430a5=2
+q30,ReauthenticateAsync 오류나면 어쩌지?,69a8938e-3d9f-4f37-960d-ec97cbca659f=3;50780a98-1761-43d4-a6d8-251364aedb1d=2;ce835828-ad6f-439a-8dd2-7807b4bc3844=1
+q31,scrypt 해시 알고리즘이 뭐야?,4b98346a-7827-4f96-8c5f-b231cd40506d=3;4b5ed29c-8027-493d-b8dc-7bce909d32ea=2;fd8eaa76-cfdb-4d30-8759-64385757bc6a=2
+q32,durationMillis가 뭐야?,90c9e507-add8-48d2-a483-fb393c3b41fc=3;5b843177-5e62-43eb-b1f7-ef5ce26f63fc=2;95f22711-1b33-417d-9e19-7234dc79c704=1
+q33,legs 정보는 어디서 찾지?,c4bf6730-56aa-4a9f-b582-b494d2aee53e=2;4f377bc8-9098-4e3f-8ca3-55cfaf39d0ca=1;
+q34,경로 설명은 어떻게 봐?,fe4d37d8-2e54-40fd-a2f3-b2467d39d0c8=3;
+q35,구글 맵스에서 최적화된 경로 찾기,19222095-b734-4035-a62a-09b73dac3a06=3;22a7f5f7-e92b-4a3b-acc1-95dd7ba3a303=2;b43bef79-99e1-47bc-8362-fd4053919d94=1
+q36,파이어스토어에서 배열에 값 추가하는 법?,f609b680-d969-4ece-ba02-38c93590a9da=2;aa1fe363-cb18-48b9-9e24-035656160a2e=2;
+q37,How to remove an item from Firestore array?,8826077d-81d6-4edf-b635-71b87ea021f7=3;3b7b96e3-1fad-47dc-b514-1d84ffcbc466=2;65d81f7a-8882-454d-a877-cdebd543faa4=2
+q38,파이어스토어 regions 배열에 지역 추가하려면?,d6bee40e-4c6b-460c-b662-f8a9b30edadd=3;553164bd-1379-478b-a81c-028eeb2d4cf7=2;
+q39,Firestore arrayUnion 함수 어떻게 쓰지?,d6bee40e-4c6b-460c-b662-f8a9b30edadd=3;8826077d-81d6-4edf-b635-71b87ea021f7=2;3b8a72b6-6a79-4748-bcb1-31b513fad163=2
+q40,C# Firestore에서 배열 업데이트하는 방법은?,3b76c5a6-16cf-478b-849a-ac2cac7bf143=3;553f5084-a6f6-438c-b133-d76636e0a86d=1;446374f2-d0bb-47dc-9d6d-77ea20251166=1
+q41,Operation이 뭐예요?,018b11ef-09af-48e3-8ca4-811ccbc10257=3;fbcfc8a7-de3f-4cd1-bc5f-f2742ed65131=2;58abc54f-0ebd-4f2d-86b6-ea348f12e310=1
+q42,Firestore의 long-running operation은 어떤 건가요?,58abc54f-0ebd-4f2d-86b6-ea348f12e310=2;bb427a79-99f0-4dac-84a4-aecb600abfc4=2;778cd587-d025-4489-bbcc-490b61d2cdc4=1
+q43,이거 JSON 형식 어떻게 쓰죠?,7b39332e-bff4-4b1c-b191-9ad76cb7d0f1=3;a02672b8-33da-4d5a-b684-7681f9cfdc6f=2;
+q44,결과에 error가 있으면 어떻게 해요?,ef0d362c-c3eb-4080-9ba0-e49539b16f99=2;
+q45,metadata에 뭐가 들어가나요?,e91f45ae-3078-477e-9c74-7f0daf6b5f3e=3;47b8d5e7-c7e0-4584-bbc6-94107264898a=2;b9548447-b2cd-4386-885f-5ab70b436090=1
+q46,빅쿼리 연결 인증은 어떻게 해?,1555bc92-c057-49d9-8d33-2c4d57add414=2;
+q47,프라이빗 서비스 커넥트 URL 설정 방법?,379e8952-57ff-460a-b8c2-0924d4422bdb=3;40ec3239-08f0-404e-ba05-f4ff601262f9=2;ec6202aa-a03b-4528-a819-348b0f7cc76b=1
+q48,JDBC 트랜잭션 어떻게 사용해?,26461687-ad56-48b4-b09d-726b3be881f3=2;
+q49,데이터셋 프로젝트 ID 설정하는 법?,7d2f879a-1e10-4584-91d4-2856851610f9=3;a2cf404a-366d-432b-8177-585b49f108f9=2;c720944b-424e-4462-a3b7-067a7cb6a3fb=2
+q50,ODBC 드라이버 업데이트 뭐가 바뀌었어?,85f6ff42-e5d9-42ce-b2e9-5c79a99c9ce1=3;a99f07de-a97c-474e-9c2c-0a0d1c54cdfd=2;26461687-ad56-48b4-b09d-726b3be881f3=1
+q51,빅쿼리에서 텍스트 분석 어떻게 해?,74ddf818-0f88-4e71-aaac-ccde7030f48b=3;1c7801ac-790e-4b4a-a705-abba9afda4cc=1;
+q52,ML.Understand_Text 함수 사용법 뭐야?,acc0da2b-cbff-44de-a1ce-ca2a6a3ac6fd=3;452b25b4-3274-4e35-83ed-3331dc835a5a=2;07fb3a39-587b-461e-8900-6e02514a389c=1
+q53,원격 모델 만들려면 뭐가 필요해?,5113ea9a-f3ec-4cc8-a58d-b2482fcfaa92=3;91d4c281-7271-4308-9b6e-d9dc2178b57c=2;87da42c6-5d7b-40b8-861f-a6982faf6c67=2
+q54,BigQuery 텍스트 분석하려면 IAM 역할 뭐 있어야 해?,61f0fdc2-01a4-49ad-923c-0c00918a3d4f=3;82cc8e21-16b9-4405-bc22-0480d2261a11=2;59b8ef3f-5f46-4083-b0b9-77930a0ed4f5=2
+q55,자연어 처리 모델 추론은 어떻게 해?,452b25b4-3274-4e35-83ed-3331dc835a5a=3;f10d2dd1-ac60-4677-88f8-50ccb25e14c1=2;1c7801ac-790e-4b4a-a705-abba9afda4cc=1
+q56,주소 유효성 검사 API 뭐야?,64969999-008f-48df-86c3-21dee6ef2b51=3;fdc2300d-3b58-45e2-9d93-a14713913ece=2;
+q57,주소 입력했는데 수락 안됨 원인?,76260349-cde2-4ed0-a177-da154d1a2114=3;bff5975c-5b0d-407b-9ef8-15fe1cf447ad=2;884f083a-cb4d-4d87-ab1b-ea45d335d513=2
+q58,어떻게 주소 검증을 하지?,7a221e68-4eec-4df4-980f-ba5cbdf3b084=3;2aea9c26-2bbd-4ddd-aeaf-5234955a28a6=2;
+q59,주소 검증할 때 필요한 정보는?,717ce05d-e498-4713-9923-6cfa3db176d6=3;8e73d6f3-8f91-430c-a633-d78810eae850=2;4a9dae03-02ae-405f-9572-619f3387d3e2=1
+q60,구글 맵스 주소 유효성 어떻게 써요?,64969999-008f-48df-86c3-21dee6ef2b51=3;fdc2300d-3b58-45e2-9d93-a14713913ece=2;
+q61,빅쿼리에서 예약 삭제하는 법?,3cf979c8-5258-4da8-96f1-6df56adb9b05=3;34a27a7d-e39a-4c62-9a18-5f538521e335=2;e69f6d09-0636-4b34-b3ca-ebf0a13c4ebf=2
+q62,DROP RESERVATION 쿼리 어떻게 써?,cbdf63d1-3671-4993-be2d-ee8c72706731=3;5ca0d7b8-4d4c-4ed8-a45a-e0c1177c90fc=2;
+q63,bq rm 명령어 사용법 알려줘,9c5702cc-cd98-41da-9d40-0fe18a6a0a9f=3;2c7fd7c1-a909-4fd4-b64a-fd7aee388a1d=2;4d4abf30-90a2-410e-aede-7fb8d431ef1b=1
+q64,예약 리소스 관리하는 방법 뭐야?,623c7d2b-cbcb-40c7-933b-a5651ea0b896=3;f6b0c564-b181-451d-ace6-6be88e0a73c1=2;268f9d62-da09-4dc5-9375-9ad010fbf86d=2
+q65,admin project id 찾는 법은?,0aec5665-8fc1-4aec-bcc2-ecab9e415337=3;e36c5625-3d62-4a51-852d-ef57f0ed0a93=2;97b05144-925d-42cc-a8b5-d9fd5cf8dac4=1
+q66,교통 감지 라우팅 어떻게 설정해?,6db5ad2f-1960-4461-9f32-f6024ad1a0cd=3;f805c6dd-3698-4823-abbe-4d7f9685f622=2;58f59853-ba09-4c1d-9e3f-98d759a28bf4=2
+q67,TRAFFIC_AWARE_OPTIMAL 이거 뭐야?,b58279cf-f77c-4c04-a110-4ae7cf6cc6f9=3;354780d2-a9ce-4781-96b3-0da84447b362=2;e1fadd21-570a-4754-9216-7a3f82f27d8e=1
+q68,운전할 때 최적 경로 설정하는 방법?,dd0d22bd-d857-4e5d-9a2c-12fd35f9b78d=3;25a9bb83-de9d-4279-8324-1f34da89e80e=2;5b8ca89e-e1ba-41fa-a254-476594faa654=2
+q69,JSON으로 라우팅 설정하는 법 좀 알려줘,4ab3afd0-4e37-4bab-ae36-cdd7643b4f74=3;1d1a13b5-b8c0-4430-ad89-d5c114441b92=2;25a9bb83-de9d-4279-8324-1f34da89e80e=1
+q70,지도 API에서 트래픽 신경 쓰는 방법?,44ee76a5-759a-4e92-96b5-e103708ed401=3;e1fadd21-570a-4754-9216-7a3f82f27d8e=2;a7c5bd7a-20f8-4972-a603-eac4a142b3cd=1
+q71,GeoJSON 데이터 어떻게 지도에 표시해?,24c2c930-f9aa-4e34-a78f-ccf3eec6f64f=3;36c508eb-ff8e-4110-9d1c-d0d816658fff=2;46d1b5fe-ebf7-4eb8-9621-ea9d1a7596ae=2
+q72,지도에 데이터 가져오는 법?,5cba7d7a-811f-4d24-a65b-1d13ae34aa11=3;bbf43575-238b-423b-ba43-19c8447027f6=2;8c4e8bd0-045b-41a1-8377-5fced35c5942=1
+q73,Google Maps에서 GeoJSON 사용법 좀 알려줘,5cba7d7a-811f-4d24-a65b-1d13ae34aa11=3;c4b59f0b-1bc2-4413-9094-ba0bad854dae=2;1eee0136-5f77-4cf9-bcc8-a034acee86f2=2
+q74,디자인 지도에 GeoJSON 넣는거 쉬워?,dac90e1e-0df1-4a90-9418-4acc8a4b63d2=3;36c508eb-ff8e-4110-9d1c-d0d816658fff=2;b228e9b3-f017-4c02-98d3-e72cbbefd1cc=2
+q75,매장 위치 검색 솔루션은 어디서 봐?,5cba7d7a-811f-4d24-a65b-1d13ae34aa11=3;
+q76,사람 정보 API 상태 코드 뭐야?,513a20a4-4a6b-4f47-896b-5892f2d54551=2;f8fcee32-d1f4-4cfe-95e4-3363e014eb89=2;26276d16-6f8d-4cfd-bbc6-0cae2c6ddf2f=2
+q77,Google People API 상태 확인 방법?,0d925e82-79f4-4e31-b617-14a86bfad027=2;9928c27d-4994-4dda-bfd1-e7f9e68e358f=2;d9c6e3a5-608b-4c98-affc-1bb31a9cfc10=2
+q78,상태 코드에 따른 에러 어떻게 처리해?,d3fdcbb1-f3a5-4d9b-b01f-e08878222f1e=2;
+q79,이 API 쓰면 뭐가 좋아?,a9e2c1da-d080-4263-9f1c-44dcd6b84d3e=3;1c2f68f7-2048-4470-b967-559108d83b3d=2;870ff2eb-87dc-45f6-bed8-ef11ddc09ffc=2
+q80,API 요청할 때 주의할 점은?,e3f162d1-b973-4549-8a86-9dc5b4978df3=3;
+q81,구글 토큰 검증 어떻게 해?,287a88eb-0305-46cf-90dc-55bc01a405d2=3;e7d3712d-98cb-4d86-b78b-b0a66dfa0de3=2;
+q82,Bearer 토큰은 뭔데?,3c27ca3b-3c40-45fc-8df9-764ff029ef82=3;d19ddb55-1e51-4f50-8a32-040031dbe2ff=2;e648d325-e3af-41d0-851e-485a87241646=2
+q83,구글 로그인 인증서버 연동하는 법?,819c8b9d-c8ae-4be4-8444-aaf71f8302cc=3;b72bd7f1-385b-417c-ac7d-fcc8ca353279=2;1308a4dd-484c-404d-b303-fb93d92c230b=1
+q84,Gmail 액션용 토큰 사용 방법은?,369c62d8-c4e4-407e-aef5-7bd3b8df7722=3;d4c1c498-e096-4a39-9dbb-be137b3277b3=2;
+q85,AUDIENCE 설정 어떻게 하지?,ad631bd4-1ded-4638-a19b-da75a8b7cc8e=3;1a3917d1-4126-4fdd-a8c8-dcc2fab7c055=2;
+q86,빅쿼리 외부 테이블 옵션 뭐야?,4f37970a-2ce8-4420-8032-2a9ec353c342=3;901a00c9-1a35-4ff2-9365-9b4cb9af485f=2;841a3979-e026-4253-8275-94b98de9e940=2
+q87,google-cloud-bigquery 3.29.0 변경사항?,9770a0dc-5785-4151-91ca-75af55633f14=3;48ade022-dcd9-4f06-b716-677ba384b0e2=2;3f6cf1b6-4f25-4d66-a2f9-a368f9bda5c6=1
+q88,파이썬 빅쿼리 업데이트 내용은?,2db373d7-73cc-4bc4-bb32-875652a0f725=3;dda2c6b4-eb26-40dc-8d5b-4329d3185653=2;
+q89,bigquery storage managedwriter는 뭐지?,b0ed4df1-4036-48bc-a758-ec8b9091bebb=3;83377c51-48a1-4bab-ad4b-882251b2ee2c=2;43b39467-60b4-4889-b186-f223969ff484=1
+q90,빅쿼리로 클라우드 저장소 데이터 쿼리하는 법,868401f0-00d1-4dcc-a660-613c6f963949=2;c4cf63ce-cdf5-4649-89b1-d364d1869e8e=2;
+q91,Cloud SQL에서 데이터 쿼리 가능해?,428a4f4d-83cf-4b83-a01e-30d3d486cac1=3;2adfd84c-3acf-460e-bac7-21cdd6757161=2;
+q92,빅쿼리 외부 데이터 소스 지원하는 거 뭐가 있어?,74d574ec-5d58-4f8c-b4df-25b84862599f=3;9feef42c-2df2-456d-8a5a-79643bd168e0=2;e0bb94b9-edb3-4613-b674-8b40ceecfeec=1
+q93,빅쿼리 위치 설정 어떻게 해?,1c7801ac-790e-4b4a-a705-abba9afda4cc=3;
+q94,빅쿼리 변환 API 어떻게 써?,37a0eee5-9d0b-47ff-b126-5da857d1d51a=3;
+q95,SQL 쿼리 변환하는 법?,fec28d51-c7c4-48ab-bd74-720542eb311e=3;0696281b-d6ed-4619-8134-5782842a767d=2;039700d9-eb98-4a30-a8c4-0141ec77d51b=2
+q96,클라우드 저장소에 파일 업로드 어떻게 해?,ea7de4fd-ce17-41c1-a692-73ce81d2fe25=3;1f184ae6-929c-4f11-a4aa-3628e9ab4876=2;
+q97,Migration API 권한은 뭐야?,f91a1899-8f0c-445e-adb0-9b646a719cc9=3;4db45fb2-fbe5-411b-aec6-1adb7787c133=2;37a0eee5-9d0b-47ff-b126-5da857d1d51a=2
+q98,변환 작업 제출하려면 뭐 필요해?,37a0eee5-9d0b-47ff-b126-5da857d1d51a=3;865906d3-fc6b-4c04-a150-732e2c9c4b6c=2;f586b1a7-8688-4373-8d13-870b543b699f=1
+q99,구글 API에서 결과 가져오는 법?,aa6b48e2-0785-4415-9cce-bed6e30190b4=3;6cbfaef9-996a-4d4c-840d-566c504a4057=1;
+q100,구글 API 결과 출력하는거 어떻게 해?,1c7801ac-790e-4b4a-a705-abba9afda4cc=2;4dd8e0e0-9936-4867-b356-d8e0804f9292=1;ef0d362c-c3eb-4080-9ba0-e49539b16f99=1
+q101,row.s가 뭐야?,df13af68-b2cb-4633-b942-802c08463662=3;
+q102,빅쿼리에서 지원하는 데이터 타입 뭐가 있지?,a99f07de-a97c-474e-9c2c-0a0d1c54cdfd=2;
+q103,유튜브 채널 빅쿼리 전송하는 방법?,08efc9de-ca0a-4a24-9c0a-640f120949c7=3;
+q104,전송 만들기 어떻게 해?,1c7801ac-790e-4b4a-a705-abba9afda4cc=3;
+q105,YouTube 데이터 전송 설정하는 법?,08efc9de-ca0a-4a24-9c0a-640f120949c7=3;0a89429f-67b2-4b52-8018-ce69999400e3=2;df83e2f5-510f-45e2-a655-b63f7e1764e3=2
+q106,데이터세트 선택하는 법은?,d99422c1-2a20-4c65-8023-66949396de8a=3;70f411ce-7090-4977-a580-a6704f38127f=2;860f05de-badb-45a4-b386-cfb3b74cfe98=1
+q107,전송 실패 알림 어떻게 받지?,18631d57-c4f2-42e0-836a-dc3b4d95c4fc=3;92fdc537-ac3c-44eb-b0f0-5b71eb784467=2;319336c2-46aa-4383-9be7-879f219f992c=1
+q108,구글 맵스 앱에서 라이트 모드 어떻게 쓰나요?,2bb4de95-a277-4e5f-bead-fc7567627403=2;b8538583-3625-45c6-920b-0f075daf7fd0=1;
+q109,entrance location 어떻게 찾지?,5ce01992-2716-415c-8ab7-37b7befdd63a=3;
+q110,building place id가 뭔데?,c230bdfc-ed1c-41e0-a6fb-1846bb974e0e=3;ad9e0111-c1b1-4a6d-9a43-8ac8e9e48754=2;e2d35b60-6884-4118-8187-d163fedf14cd=2
+q111,빅쿼리 데이터 어떻게 로드해?,1c7801ac-790e-4b4a-a705-abba9afda4cc=3;
+q112,클라우드 저장소에서 데이터 가져오는 법?,bbcf536f-0fda-4626-9b9f-fc6e9d2ddda4=2;d2c2c42f-7e8f-4517-b520-2908d8945f6f=1;
+q113,csv 파일 빅쿼리에 올리는 방법?,a8ae3243-42a5-41a2-b6e5-1f011f9e7091=2;6f2c7107-a7cf-4fde-ba8b-7e9f21cc4a35=2;cf2a1645-bda4-42d1-a7b9-819912291bc4=2
+q114,빅쿼리에서 외부 테이블 쿼리하는 법?,d4305368-2c1d-419c-94fc-db0ecaf5acfb=3;476768cb-98c2-403e-bf11-536409bbf718=2;a1f70e2b-d9df-4e42-9299-ea60592ae27e=2
+q115,다양한 데이터 포맷 지원하나요?,c1b8ca09-35bc-4c81-a2e4-e44efc998fb1=3;
+q116,gcloud 프로젝트 IAM 정책 어떻게 추가해?,20492c9a-a5c4-44ee-85b3-4c8077caf4ee=3;0dace421-40ae-4edf-a296-75bc7b9b578e=2;f3de7b37-d5fe-4c73-8a37-56af6d7cc3e1=2
+q117,특정 이메일에 데이터베이스 접근 권한 주는법,f3de7b37-d5fe-4c73-8a37-56af6d7cc3e1=3;20492c9a-a5c4-44ee-85b3-4c8077caf4ee=2;60852658-bd48-4a45-9d5f-ed283b19cfc1=2
+q118,google cloud firestore 모니터링은 어떻게 해?,e9b5a1fe-6a7b-429c-84be-13b2c6391818=3;bb314e3e-6230-467f-af83-ef6a2868fcc2=2;
+q119,IAM 정책에서 특정 데이터베이스만 제외하고 싶어,be3bf4b6-7667-45db-88ef-6407ed474bdb=2;ebb62620-1bda-4c7b-8965-d786f31917f6=2;a44a23eb-201f-4808-91a7-d6e2dbef1ea9=2
+q120,gcloud 명령어로 권한 삭제하려면 어떻게 해?,ca07d7bf-c966-49d3-87f8-e7911596ad52=2;
+q121,빅쿼리에서 날짜 필드 만드는 법?,c2e3b88f-40ef-414e-8ade-00a63c60e1fe=3;3ae8e6e9-b0b7-4fcf-852b-997954b86836=1;
+q122,StandardSQLTypeName.DATE 사용법?,f36b0529-e030-4cd8-b3a7-88939df021f3=3;0e1a9062-65fe-4572-9d58-7f85ed71444d=2;6e15f707-f15d-45a4-bb37-6528ba870d39=1
+q123,구글 드라이브 변경사항 어떻게 확인해?,8604cb2d-f777-4410-8722-418c12cc2a40=2;8dc9b624-4138-43fb-967a-92bb4a84a7d6=1;
+q124,changes.list API 쓰는 법 알려줘,6612f5b4-57c9-4c6e-81b4-17f9ae227b5d=3;
+q125,공유 드라이브 변경사항 포함하려면?,8604cb2d-f777-4410-8722-418c12cc2a40=3;8dc9b624-4138-43fb-967a-92bb4a84a7d6=2;
+q126,드라이브 변경사항 목록에 뭐가 들어가?,8604cb2d-f777-4410-8722-418c12cc2a40=3;8dc9b624-4138-43fb-967a-92bb4a84a7d6=2;
+q127,includeItemsFromAllDrives가 뭐야?,8dc9b624-4138-43fb-967a-92bb4a84a7d6=3;8604cb2d-f777-4410-8722-418c12cc2a40=2;
+q128,파이어스토어에서 문서 삭제는 어떻게 해?,fb6d607b-34c5-41dc-90ba-ba3448bba2af=2;
+q129,How to delete document in Firestore?,dc3b9095-234a-45ff-844f-a35e532eb0e3=3;46105f99-e8e4-417a-9674-6bf7e3d31e68=2;89cdc58a-ba6d-4e7d-ad26-b24dadca626a=2
+q130,Firestore에서 document 지우는 방법 알려줘,5e2052ac-60ab-412a-9521-3e82ad6a21ac=3;2c3e8b5c-aae7-465c-a2fb-7db6adca2593=1;
+q131,Firestore delete 문서할 때 주의할 점 뭐야?,b9c79560-80d6-4d1e-b581-9b5b4ed8215c=3;b8159e7e-872e-4610-a667-36c24cf8d49e=2;e17e1cb8-80c4-4d4c-8235-33adfa9f64fd=1
+q132,빅쿼리 파티션 테이블 만들려면 어떻게 해?,071aa24f-3c0e-421c-873d-b6993fba87a4=3;841a3979-e026-4253-8275-94b98de9e940=2;
+q133,클러스터링 테이블 추가하는 방법?,6cdd4658-77ec-4008-9c9a-74509d77f7b1=3;2c64796d-1bb8-4f19-affb-299177c1b079=2;c5247d35-3bb8-4f88-8af4-a139c794de30=1
+q134,구글 콘솔에서 테이블 덮어쓰기 안되는 이유?,54164483-2a44-4206-956d-8a19950428e7=3;5a2e0ef4-74c9-454b-a9c7-e20d0f690d45=2;6cdd4658-77ec-4008-9c9a-74509d77f7b1=2
+q135,partitioned table이랑 clustered table 차이가 뭐야?,524b52ac-1ffb-4ec2-b919-3b549a29b3e9=3;053b4bc4-ca9e-4bb5-8bb6-2f0ce0d7df65=2;
+q136,빅쿼리에서 테이블 변환은 어떻게 해?,c79a5908-a60c-4c5a-85aa-4490d0a9aeb0=3;1c7801ac-790e-4b4a-a705-abba9afda4cc=2;
+q137,구글 클라우드에서 데이터 클린룸 만드는 법?,b00dd7e0-d21f-4f2a-8322-5cd42d31a5d1=3;32228f67-5bbc-4dd3-af36-9cda21b5a56c=2;0ccc5560-88fa-416d-bd69-30bcae5aece2=2
+q138,How to create 데이터 교환 in Analytics Hub?,00140e0d-8323-46b7-a9d2-1294dbeacbf5=3;941d6665-d5e2-4708-ac34-1869ea4fc14d=2;f14ced37-2b2a-4bb1-8bdc-0c276bee992e=2
+q139,CLEAN_ROOM_ID는 어떻게 정해?,1217d1db-df22-418f-8b40-236e8b3b50af=3;040f1b22-8a3b-4f89-bbf1-712459f3b0d1=2;
+q140,CLEAN_ROOM_NAME은 뭘로 정해야 해?,1217d1db-df22-418f-8b40-236e8b3b50af=3;040f1b22-8a3b-4f89-bbf1-712459f3b0d1=2;d105bdc9-a212-4674-a461-328962389e32=2
+q141,API로 데이터 교환 요청할 때 주의할 점 뭐야?,030cad49-68e3-403d-acfd-e08d104a3317=3;63d2931b-2a1f-4b71-9434-1be04c737f1d=2;4a766637-55b4-4689-9766-8d2097e0219b=1
+q142,Dataprep 사용법 알려줘,5fff74fe-b426-460d-9b1a-e29e0be81138=3;410945a4-d93c-46e8-afca-9db8e8d9f407=2;cd82bc8b-9e2e-4096-8e68-e32956c3e295=1
+q143,구조화 데이터 정리하는 법?,e205f766-2093-4506-a23c-b02d5ac0fa34=3;d8debe6b-2cf7-443b-9a30-4cf3e51bf08c=2;f47fcb6f-5685-402a-bc47-378d070ea864=2
+q144,Dataflow로 데이터 옮기는 방법?,63fe9eff-a872-4d50-b4ab-cef058306335=3;bf58d8fc-8044-4ef5-80be-cd76d73d79e1=2;bdf83547-6236-40b4-9d0b-7dc06d8fc0e7=2
+q145,빅쿼리로 Oracle 데이터 전환 어떻게 해?,3f19de8a-7c44-4523-8264-02c820e73da7=3;4dd8e0e0-9936-4867-b356-d8e0804f9292=2;202a3f04-35c7-4fa4-b6c6-531bfd1f4d41=1
+q146,Dataproc 뭐하는 건데?,254c4886-19c9-4b08-8896-3dad484508f7=2;76b7809d-7fd2-451b-a389-0ad0b2aed362=2;51d98d34-dffd-42b1-b578-44d48a1a5436=1
+q147,빅쿼리에서 서브 쿼리 어떻게 쓰지?,8b934fa2-5d6f-4fa1-8597-f7413147860f=3;69459726-72d9-4b81-874d-935b615a8a01=2;0c4019ce-5c3a-4b1a-aff9-f5e6fc21506a=1
+q148,윈도우 함수 쓰는 법 알려줘,04ad924b-f807-462b-bb5c-7013e0b128e3=3;62c69881-b0e5-4a0e-822b-1357199159e8=2;4dff49f8-a009-48f1-8fef-e6da26e8c681=1
+q149,DISTINCT 문이 뭐야?,492f897f-7402-4c15-8281-c70325016784=2;14875af1-879d-4e08-9f2a-332740040fb9=1;
+q150,데이터 조작 언어(DML) 쿼리 예시,05973735-fd82-420c-90e1-0ba1c5429aac=3;c4d654bc-ccee-41c6-8212-02cdf73a0185=2;
+q151,재귀적 CTE 사용법 궁금해,e70e7e84-c55e-4cc7-bf0c-281eb7b58c14=3;ad23ef6d-b2d7-4d63-8b92-df2a136760af=2;d70461a0-cb65-491e-9403-eb722f518856=1
+q152,Firestore 백업 스케줄 어떻게 확인해?,19583308-654f-45da-8ab5-a186752d8b6c=3;1ac8009e-85f0-46e7-ae2c-72b4f17de2e4=2;4accbafc-81fc-48d2-9581-bcbe2995ae8a=1
+q153,How to list backup schedules in Firestore?,c6b41ba8-3432-40d3-981a-291dbc3b9286=3;3197f8d0-64fe-4c68-ab90-852b0126abf1=2;4c9754d2-1f6f-4cfb-bf84-100a1ac1e09d=2
+q154,파이어스토어 백업 일정 조회하는 방법 있나?,8c00c3ca-f445-4d70-9b55-ccccbc21c586=3;9ef131ac-070d-4cca-a4d3-2b2bc20058e7=2;cc061606-bd68-43dc-b302-4227b9e4721f=2
+q155,Firestore에서 backupSchedules 가져오는 법은?,b1236190-a9e0-4d0a-957a-d37a1e62ace4=3;9a895fa8-f34c-4383-b129-09452cf94270=2;4accbafc-81fc-48d2-9581-bcbe2995ae8a=2
+q156,백업 스케줄 보려면 어떤 API 써야해?,f54331ef-725c-4dc6-9138-4fa65bf9a060=2;
+q157,Swift로 데이터 수정하는 법 뭐야?,00120297-046b-4891-bcea-43279308c198=3;8860fbab-1f5d-4278-b8e0-ff59d93df76b=2;
+q158,Objective-C에서 문서 수정하는거 알려줘,908cd34d-47e7-4c50-8dcb-3ccf097a38ec=3;73c24211-906e-45c1-b3d3-9e90e7e910be=2;4528e5a8-d5f5-4852-ace0-e0f2b3d65a3d=1
+q159,lastUpdated 필드에 서버 타임스탬프 추가는?,dd392466-6206-4ed8-9b11-5b08c46df738=3;0527384a-8520-4c19-8f52-11cd22b62081=2;868c2aa3-fdbd-4b0f-99b8-a90ea580420b=1
+q160,서버 타임스탬프 업데이트 하는 방법 궁금해,dd392466-6206-4ed8-9b11-5b08c46df738=3;
