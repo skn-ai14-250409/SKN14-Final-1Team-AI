@@ -237,7 +237,7 @@ def tool_based_search_node(state: ChatState) -> ChatState:
     
     # LLM에게 명시적으로 "각 질문마다 툴 호출"을 요구
     search_instruction = f"""
-    다음의 Google API 관련 질문들에 대해, 각 질문마다 반드시 한 번씩
+    다음의 Google API 관련 **검색 쿼리**들에 대해, 각 쿼리마다 반드시 한 번씩
     `vector_search_tool`을 호출해 주세요.
     - 질문들: {queries}
     - 선택 가능한 Google API 태그(1개 이상): 
@@ -325,7 +325,7 @@ def qa_tool_based_search_node(state: ChatState) -> ChatState:
 
     # LLM에게 명시적으로 "각 질문마다 툴 호출"을 요구
     search_instruction = f"""
-    다음의 Google API 관련 질문들에 대해, 각 질문마다 반드시 한 번씩
+    다음의 Google API 관련 **검색 쿼리**들에 대해, 각 쿼리마다 반드시 한 번씩
     `qa_vector_search_tool`을 호출해 주세요.
     - 질문들: {queries}
     - 선택 가능한 Google API 태그(1개 이상): 
@@ -518,19 +518,17 @@ def generate_alternative_queries(state: ChatState) -> ChatState:
         # 이미 한 번 fallback을 돌았다면 재실행하지 않음
         return state
 
-    question = state["question"]
-    history = state.get("messages", [])[-4:]
+    rewritten = "\n".join([m['content'] for m in state.get("rewritten", [])])
 
     context = "\n".join(state.get("search_results", [])[:2])
     context_qa = "\n".join(state.get("qa_search_results", [])[:2])
 
-    print(f"[generate_alternative_queries] 전달될 히스토리: {history}")
-    print(f"[generate_alternative_queries] 전달될 원문 문서: {context}")
-    print(f"[generate_alternative_queries] 전달될 QA 문서: {context_qa}")
+    # print(f"[generate_alternative_queries] 전달될 rewritten: {rewritten}")
+    # print(f"[generate_alternative_queries] 전달될 원문 문서: {context}")
+    # print(f"[generate_alternative_queries] 전달될 QA 문서: {context_qa}")
 
     response = alt_query_chain.invoke({
-        "question": question,
-        "history": history,
+        "rewritten": rewritten,
         "context": context, 
         "context_qa": context_qa,
     })
