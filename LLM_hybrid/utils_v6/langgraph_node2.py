@@ -214,7 +214,12 @@ def vector_search_tool(query: str, api_tags: List[str] = None) -> List[str]:
         filters["tags"] = {"$in": api_tags}
 
     print(f"[vector_search_tool] 검색 중: '{query}' with filters: {filters}")
-    results = vs.similarity_search(query, k=8, filter=filters)
+    # results = vs.similarity_search(query, k=8, filter=filters)
+
+    if filters:
+        results = vs.similarity_search(query, k=8, filter=filters)
+    else:
+        results = vs.similarity_search(query, k=8)
 
     # 각 결과에서 page_content만 추출하여 반환
     return [result.page_content for result in results]
@@ -241,6 +246,13 @@ def tool_based_search_node(state: ChatState) -> ChatState:
     규칙:
     1) 각 질문마다 적절한 api_tags(1개 이상)를 선택하세요.
     2) 선택 가능한 api_tags만 메타 필터로 사용하세요
+    3) 질문의 내용과 가장 관련성이 높은 태그를 신중하게 선택하세요.
+
+    예시:
+    - 질문: 구글 드라이브에서 파일 권한 수정하는 방법
+    - 툴 호출: vector_search_tool(query="구글 드라이브 파일 권한 수정", api_tags=["drive"])
+
+    
     툴 인자 예:
     {{"query": "<하나의 질문>", "api_tags": ["gmail","calendar"]}}
     """
@@ -267,6 +279,8 @@ def tool_based_search_node(state: ChatState) -> ChatState:
     state['search_results'] = list(dict.fromkeys(search_results))
     state['tool_calls'] = tool_calls
 
+    print(f"[tool_based_search_node] 실행 - state['search_results']={state['search_results']}")
+
     return state
 
 
@@ -288,7 +302,13 @@ def qa_vector_search_tool(query: str, api_tags: List[str] = None) -> List[str]:
         filters["tags"] = {"$in": api_tags}
 
     print(f"[qa_vector_search_tool] 검색 중: '{query}' with filters: {filters}")
-    results = qa_vs.similarity_search(query, k=8, filter=filters)
+    # results = qa_vs.similarity_search(query, k=8, filter=filters)
+
+    if filters:
+        results = qa_vs.similarity_search(query, k=8, filter=filters)
+    else:
+        results = qa_vs.similarity_search(query, k=8)
+    
     print(results)
 
     # 각 결과에서 page_content만 추출하여 반환
@@ -314,6 +334,13 @@ def qa_tool_based_search_node(state: ChatState) -> ChatState:
     규칙:
     1) 각 질문마다 적절한 api_tags(1개 이상)를 선택하세요.
     2) 선택 가능한 api_tags만 메타 필터로 사용하세요
+    3) 질문의 내용과 가장 관련성이 높은 태그를 신중하게 선택하세요.
+
+    예시:
+    - 질문: 구글 드라이브에서 파일 권한 수정하는 방법
+    - 툴 호출: vector_search_tool(query="구글 드라이브 파일 권한 수정", api_tags=["drive"])
+
+    
     툴 인자 예:
     {{"query": "<하나의 질문>", "api_tags": ["gmail","calendar"]}}
     """
@@ -339,6 +366,7 @@ def qa_tool_based_search_node(state: ChatState) -> ChatState:
     # state['qa_search_results'] = search_results
     state['qa_search_results'] = list(dict.fromkeys(search_results))
     state['qa_tool_calls'] = tool_calls
+    print(f"[qa_tool_based_search_node] 실행 - qa_search_results={state['qa_search_results']}")
 
     return state
 
@@ -376,11 +404,13 @@ def basic_langgraph_node(state: ChatState) -> Dict[str, Any]:
         }
     ).strip()
 
-    state['search_results'] = search_results + search_results2
+    # state['search_results'] = search_results + search_results2
+    state['search_results'] = search_results
+    state['qa_search_results'] = search_results2
     state['answer'] = answer
 
-    print(f"[basic_langgraph_node] context 문서: {search_results}, qa 문서 수: {search_results2}")
-    print(f"[basic_langgraph_node] 생성된 답변: {answer}, 검색 문서: state['search_results']")
+    print(f"[basic_langgraph_node] context 문서: {search_results}, qa 문서: {search_results2}")
+    print(f"[basic_langgraph_node] 생성된 답변: {answer}")
 
     return state  # 답변을 반환
 
@@ -451,12 +481,16 @@ def evaluate_answer_node(state: ChatState) -> str:
     answer = state["answer"]
     history = state.get("messages", [])
     question = state["question"]
-    context = "\n".join(state.get("search_results", []))
+    # context = "\n".join(state.get("search_results", []))
+
+    context = "\n".join(state.get("search_results", []))  # 원본 문서
+    context_qa = "\n".join(state.get("qa_search_results", []))      # QA 문서
 
     result = quality_chain.invoke({
         "history": history,
         "question": question,
-        "context": context,
+        "context": context, 
+        "context_qa": context_qa,
         "answer": answer,
     }).strip()
 
@@ -485,13 +519,20 @@ def generate_alternative_queries(state: ChatState) -> ChatState:
         return state
 
     question = state["question"]
-    history = state.get("messages", [])
-    search_results = state.get("search_results", [])
+    history = state.get("messages", [])[-4:]
+
+    context = "\n".join(state.get("search_results", [])[:2])
+    context_qa = "\n".join(state.get("qa_search_results", [])[:2])
+
+    print(f"[generate_alternative_queries] 전달될 히스토리: {history}")
+    print(f"[generate_alternative_queries] 전달될 원문 문서: {context}")
+    print(f"[generate_alternative_queries] 전달될 QA 문서: {context_qa}")
 
     response = alt_query_chain.invoke({
         "question": question,
         "history": history,
-        "search_results": "\n".join(search_results),
+        "context": context, 
+        "context_qa": context_qa,
     })
 
     new_queries = response.get("questions", [])
