@@ -13,7 +13,7 @@ from .rag2 import (
 )
 from .retriever import retriever_setting
 from .retriever_qa import retriever_setting2
-from .retriever_hybrid import hybrid_retriever_setting, hybrid_retriever_setting_qa, debug_hybrid_retrieval
+from .retriever_hybrid import hybrid_retriever_setting, hybrid_retriever_setting_qa
 
 import openai
 from dotenv import load_dotenv
