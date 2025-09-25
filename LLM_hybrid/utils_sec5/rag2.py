@@ -69,6 +69,14 @@ def query_setting():
 
        - 이전 대화에서 이미 답변이 나온 질문은 생성하지 마세요.
        - 질문은 1개가 될 수도 있고 여러개가 될 수도 있습니다.
+       
+       - 만약 사용자 질문에 오타나 잘못된 용어가 포함되어 있다면 올바른 용어로 수정하여 질문을 생성하세요.
+        - 예시1 (오타 수정):
+            - 사용자 입력: projets.databeses.gte 메서드 쓸때 HTTP 리퀘스트 포맷이 뭐에요?
+            - 생성 질문: projects.databases.operations.get 메서드의 HTTP 요청 형식은 무엇인가요?
+        - 예시2 (오타 수정):
+        - 사용자 입력: ttll이 뭐에요?
+        - 생성 질문: TTL(Time-to-Live)이 무엇인가요?
 
        대화 히스토리: {rewritten}
 
@@ -93,7 +101,7 @@ def query_setting():
 
 
 def classify_chain_setting():
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    llm = ChatOpenAI(model="gpt-4.1", temperature=0)
 
     classification_prompt = PromptTemplate.from_template(
         """
@@ -180,7 +188,7 @@ def classify_chain_setting():
 
 
 def simple_chain_setting():
-    llm = ChatOpenAI(model="gpt-4o", temperature=0.4)
+    llm = ChatOpenAI(model="gpt-4.1-nano", temperature=0.4)
     simple_prompt = PromptTemplate.from_template(
         """
     너는 사용자의 **일상적인 질문**에만 답변하는 도우미야.  
@@ -207,7 +215,7 @@ def simple_chain_setting():
 
 
 def impossable_chain_setting():
-    llm = ChatOpenAI(model="gpt-4o", temperature=0.4)
+    llm = ChatOpenAI(model="gpt-4.1-nano", temperature=0.4)
     imp_prompt = PromptTemplate.from_template(
         """
     너는 사용자의 **사용자의 질문**에 대한 내용을 몰라서 답변할 수 없는 챗봇이야.  
