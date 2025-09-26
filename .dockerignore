@@ -1,5 +1,7 @@
 .idea
+.DS_Store
 .git
+.github
 .gitignore
 __pycache__
 *.pyc
@@ -11,4 +13,3 @@ Dockerfile
 *.sh
 *.yml
 .env
-db.sqlite3
